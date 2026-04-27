@@ -71,7 +71,7 @@ export default function Home() {
         onDescartar={descartarSessao}
       />
 
-      <main className="max-w-lg mx-auto px-4 pt-4 pb-28">
+      <main className="max-w-lg mx-auto px-4 pt-4 pb-36">
         <ItemForm onAdicionar={adicionarItem} />
 
         <div className="mt-4">

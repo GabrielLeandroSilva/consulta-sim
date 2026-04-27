@@ -50,7 +50,7 @@ export function SessaoCard({ sessao, onRemover }: SessaoCardProps) {
                 <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-100">
                     <button
                         onClick={() => onRemover(sessao.id)}
-                        className="flex items-center gap-1 text-xs text-gray-400 hover:text-red-500 transition-colors"
+                        className="flex cursor-pointer items-center gap-1 text-xs text-gray-400 hover:text-red-500 transition-colors"
                     >
                         <Trash2 size={13} />
                         Excluir
@@ -58,7 +58,7 @@ export function SessaoCard({ sessao, onRemover }: SessaoCardProps) {
 
                     <button
                         onClick={() => setExpandido(!expandido)}
-                        className="flex items-center gap-1 text-xs text-indigo-600 hover:text-indigo-700 transition-colors"
+                        className="flex cursor-pointer items-center gap-1 text-xs text-indigo-600 hover:text-indigo-700 transition-colors"
                     >
                         {expandido ? (
                             <>
