@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist } from "next/font/google"
+import { BottomNav } from "@/components/BottomNav";
 import "./globals.css";
 
 const geist = Geist({ subsets: ["latin"] });
@@ -29,7 +30,10 @@ export default function RootLayout({
   }) {
   return (
     <html lang="pt-BR">
-      <body className={geist.className}>{children}</body>
+      <body className={geist.className}>
+        {children}
+        <BottomNav />
+      </body>
     </html>
   )
 }
