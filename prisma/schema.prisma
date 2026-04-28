@@ -1,0 +1,34 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Sessao {
+  id           String    @id @default(cuid())
+  nome         String
+  total        Float     @default(0)
+  finalizada   Boolean   @default(false)
+  criadaEm     DateTime  @default(now())
+  finalizadaEm DateTime?
+  itens        Item[]
+}
+
+model Item {
+  id            String        @id @default(cuid())
+  nome          String
+  quantidade    Int
+  precoUnitario Float
+  subtotal      Float
+  categoria     String
+  criadaEm      DateTime      @default(now())
+  sessaoId      String
+  sessao        Sessao        @relation(fields: [sessaoId], references: [id], onDelete: Cascade)
+}
