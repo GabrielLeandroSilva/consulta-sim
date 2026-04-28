@@ -16,7 +16,7 @@ CREATE TABLE "Item" (
     "precoUnitario" REAL NOT NULL,
     "subtotal" REAL NOT NULL,
     "categoria" TEXT NOT NULL,
-    "criadaEm" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "criadoEm" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "sessaoId" TEXT NOT NULL,
     CONSTRAINT "Item_sessaoId_fkey" FOREIGN KEY ("sessaoId") REFERENCES "Sessao" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
