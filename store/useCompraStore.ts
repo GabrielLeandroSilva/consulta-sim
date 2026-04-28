@@ -1,131 +1,132 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
-import { Categoria, Item, Sessao } from "@/types";
+import { Item, Sessao } from "@/types";
+import { api } from "@/lib/api";
 
 interface CompraStore {
     sessaoAtiva: Sessao | null;
     historico: Sessao[];
+    carregando: boolean;
 
-    iniciarSessao: (nome: string) => void;
-    adicionarItem: (item: Omit<Item, "id" | "subtotal" | "criadoEm">) => void;
-    editarItem: (id: string, dados: Partial<Omit<Item, "id" | "criadoEm">>) => void;
-    removerItem: (id: string) => void;
-    finalizarSessao: () => void;
-    descartarSessao: () => void;
-    removerSessaoHistorico: (id: string) => void;
+    carregarHistorico: () => Promise<void>;
+    iniciarSessao: (nome: string) => Promise<void>;
+    adicionarItem: (item: Omit<Item, "id" | "subtotal" | "criadoEm">) => Promise<void>;
+    editarItem: (id: string, dados: { quantidade: number; precoUnitario: number }) => Promise<void>;
+    removerItem: (id: string) => Promise<void>;
+    finalizarSessao: () => Promise<void>;
+    descartarSessao: () => Promise<void>;
+    removerSessaoHistorico: (id: string) => Promise<void>;
 }
 
-function calcularTotal(itens: Item[]): number {
-    return itens.reduce((acc, item) => acc + item.subtotal, 0);
-}
-
-function gerarId(): string {
-    return crypto.randomUUID();
-}
-
-export const useCompraStore = create<CompraStore>()(
-    persist(
-        (set) => ({
-            sessaoAtiva: null,
-            historico: [],
-
-            iniciarSessao: (nome) =>
-                set({
-                    sessaoAtiva: {
-                        id: gerarId(),
-                        nome,
-                        itens: [],
-                        total: 0,
-                        criadaEm: new Date().toISOString(),
-                        finalizada: false,
-                    },
-                }),
-            
-            adicionarItem: (dadosItem) =>
-                set((state) => {
-                    if (!state.sessaoAtiva) return state;
-
-                    const novoItem: Item = {
-                        ...dadosItem,
-                        id: gerarId(),
-                        subtotal: dadosItem.quantidade * dadosItem.precoUnitario,
-                        criadoEm: new Date().toISOString(),
-                    };
-
-                    const itensAtualizados = [...state.sessaoAtiva.itens, novoItem];
-
-                    return {
-                        sessaoAtiva: {
-                            ...state.sessaoAtiva,
-                            itens: itensAtualizados,
-                            total: calcularTotal(itensAtualizados),
-                        },
-                    };
-                }),
-            
-            editarItem: (id, dados) =>
-                set((state) => {
-                    if (!state.sessaoAtiva) return state;
-
-                    const itensAtualizados = state.sessaoAtiva.itens.map((item) => {
-                        if (item.id !== id) return item;
-
-                        const atualizado = { ...item, ...dados };
-                        return {
-                            ...atualizado,
-                            subtotal: atualizado.quantidade * atualizado.precoUnitario,
-                        };
-                    });
-
-                    return {
-                        sessaoAtiva: {
-                            ...state.sessaoAtiva,
-                            itens: itensAtualizados,
-                            total: calcularTotal(itensAtualizados),
-                        },
-                    };
-                }),
-            
-            removerItem: (id) =>
-                set((state) => {
-                    if (!state.sessaoAtiva) return state;
-
-                    const itensAtualizados = state.sessaoAtiva.itens.filter((item) => item.id !== id);
-
-                    return {
-                        sessaoAtiva: {
-                            ...state.sessaoAtiva,
-                            itens: itensAtualizados,
-                            total: calcularTotal(itensAtualizados),
-                        },
-                    };
-                }),
-            
-            finalizarSessao: () =>
-                set((state) => {
-                    if (!state.sessaoAtiva) return state;
-
-                    const sessaoFinalizada: Sessao = {
-                        ...state.sessaoAtiva,
-                        finalizada: true,
-                        finalizadaEm: new Date().toISOString(),
-                    }
-
-                    return {
-                        sessaoAtiva: null,
-                        historico: [sessaoFinalizada, ...state.historico],
-                    };
-                }),
-            
-            descartarSessao: () => set({ sessaoAtiva: null }),
-            
-            removerSessaoHistorico: (id) =>
-                set((state) => ({
-                    historico: state.historico.filter((s) => s.id !== id),
-                })),
-        }),
-        {
-            name: "consultasim-storage",
-        }
-    )
-);
+export const useCompraStore = create<CompraStore>((set, get) => ({
+    sessaoAtiva: null,
+    historico: [],
+    carregando: false,
+  
+    carregarHistorico: async () => {
+      set({ carregando: true });
+      try {
+        const sessoes = await api.sessoes.listar();
+        const finalizadas = sessoes.filter((s) => s.finalizada);
+        const ativa = sessoes.find((s) => !s.finalizada) ?? null;
+        set({ historico: finalizadas, sessaoAtiva: ativa });
+      } finally {
+        set({ carregando: false });
+      }
+    },
+  
+    iniciarSessao: async (nome) => {
+      set({ carregando: true });
+      try {
+        const sessao = await api.sessoes.criar(nome);
+        set({ sessaoAtiva: sessao });
+      } finally {
+        set({ carregando: false });
+      }
+    },
+  
+    adicionarItem: async (dadosItem) => {
+      const { sessaoAtiva } = get();
+      if (!sessaoAtiva) return;
+  
+      set({ carregando: true });
+      try {
+        await api.itens.adicionar(sessaoAtiva.id, dadosItem);
+        const sessaoAtualizada = await api.sessoes.buscar(sessaoAtiva.id);
+        set({ sessaoAtiva: sessaoAtualizada });
+      } finally {
+        set({ carregando: false });
+      }
+    },
+  
+    editarItem: async (id, dados) => {
+      const { sessaoAtiva } = get();
+      if (!sessaoAtiva) return;
+  
+      set({ carregando: true });
+      try {
+        await api.itens.editar(id, dados);
+        const sessaoAtualizada = await api.sessoes.buscar(sessaoAtiva.id);
+        set({ sessaoAtiva: sessaoAtualizada });
+      } finally {
+        set({ carregando: false });
+      }
+    },
+  
+    removerItem: async (id) => {
+      const { sessaoAtiva } = get();
+      if (!sessaoAtiva) return;
+  
+      set({ carregando: true });
+      try {
+        await api.itens.deletar(id);
+        const sessaoAtualizada = await api.sessoes.buscar(sessaoAtiva.id);
+        set({ sessaoAtiva: sessaoAtualizada });
+      } finally {
+        set({ carregando: false });
+      }
+    },
+  
+    finalizarSessao: async () => {
+      const { sessaoAtiva } = get();
+      if (!sessaoAtiva) return;
+  
+      set({ carregando: true });
+      try {
+        const sessaoFinalizada = await api.sessoes.atualizar(sessaoAtiva.id, {
+          finalizada: true,
+          finalizadaEm: new Date().toISOString(),
+        });
+        set((state) => ({
+          sessaoAtiva: null,
+          historico: [sessaoFinalizada, ...state.historico],
+        }));
+      } finally {
+        set({ carregando: false });
+      }
+    },
+  
+    descartarSessao: async () => {
+      const { sessaoAtiva } = get();
+      if (!sessaoAtiva) return;
+  
+      set({ carregando: true });
+      try {
+        await api.sessoes.deletar(sessaoAtiva.id);
+        set({ sessaoAtiva: null });
+      } finally {
+        set({ carregando: false });
+      }
+    },
+  
+    removerSessaoHistorico: async (id) => {
+      set({ carregando: true });
+      try {
+        await api.sessoes.deletar(id);
+        set((state) => ({
+          historico: state.historico.filter((s) => s.id !== id),
+        }));
+      } finally {
+        set({ carregando: false });
+      }
+    },
+  }));
