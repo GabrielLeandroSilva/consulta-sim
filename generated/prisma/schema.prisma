@@ -1,0 +1,30 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Sessao {
+  id           String    @id @default(cuid())
+  nome         String
+  total        Float     @default(0)
+  finalizada   Boolean   @default(false)
+  criadaEm     DateTime  @default(now())
+  finalizadaEm DateTime?
+  itens        Item[]
+}
+
+model Item {
+  id            String   @id @default(cuid())
+  nome          String
+  quantidade    Int
+  precoUnitario Float
+  subtotal      Float
+  categoria     String
+  criadoEm      DateTime @default(now())
+  sessaoId      String
+  sessao        Sessao   @relation(fields: [sessaoId], references: [id], onDelete: Cascade)
+}

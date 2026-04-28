@@ -5,20 +5,33 @@ import { SessaoCard } from "@/components/SessaoCard";
 import { MetricasCards } from "@/components/MetricasCards";
 import { agruparPorMes, calcularMetricas, dadosGraficoLinha, dadosGraficoPizza, itensMaisComprados } from "@/lib/historico";
 import { History, BarChart2, List } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { GraficosHistorico } from "@/components/GraficosHistorico";
 
 type Aba = "resumo" | "lista";
 
 export default function HistoricoPage() {
-    const { historico, removerSessaoHistorico } = useCompraStore();
+    const { historico, carregando, removerSessaoHistorico, carregarHistorico } =
+    useCompraStore();
     const [aba, setAba] = useState<Aba>("resumo");
+
+    useEffect(() => {
+        carregarHistorico();
+      }, []);
 
     const grupos = agruparPorMes(historico);
     const metricas = calcularMetricas(grupos);
     const dadosLinha = dadosGraficoLinha(grupos);
     const dadosPizza = dadosGraficoPizza(historico);
     const dadosBarras = itensMaisComprados(historico);
+
+    if (carregando) {
+        return (
+          <main className="min-h-screen bg-gray-50 flex items-center justify-center pb-20">
+            <p className="text-sm text-gray-400">Carregando...</p>
+          </main>
+        );
+      }
 
     if (historico.length === 0) {
         return (

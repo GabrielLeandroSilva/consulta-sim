@@ -23,26 +23,30 @@ export const useCompraStore = create<CompraStore>((set, get) => ({
     carregando: false,
   
     carregarHistorico: async () => {
-      set({ carregando: true });
-      try {
-        const sessoes = await api.sessoes.listar();
-        const finalizadas = sessoes.filter((s) => s.finalizada);
-        const ativa = sessoes.find((s) => !s.finalizada) ?? null;
-        set({ historico: finalizadas, sessaoAtiva: ativa });
-      } finally {
-        set({ carregando: false });
-      }
-    },
+        set({ carregando: true });
+        try {
+          const sessoes = await api.sessoes.listar();
+          const finalizadas = sessoes.filter((s) => s.finalizada);
+          const ativa = sessoes.find((s) => !s.finalizada) ?? null;
+          set({ historico: finalizadas, sessaoAtiva: ativa });
+        } catch (err) {
+          console.error("ERRO AO CARREGAR HISTÓRICO:", err);
+        } finally {
+          set({ carregando: false });
+        }
+      },
   
     iniciarSessao: async (nome) => {
-      set({ carregando: true });
-      try {
-        const sessao = await api.sessoes.criar(nome);
-        set({ sessaoAtiva: sessao });
-      } finally {
-        set({ carregando: false });
-      }
-    },
+        set({ carregando: true });
+        try {
+          const sessao = await api.sessoes.criar(nome);
+          set({ sessaoAtiva: sessao });
+        } catch (err) {
+          console.error("ERRO AO INICIAR SESSÃO:", err);
+        } finally {
+          set({ carregando: false });
+        }
+      },
   
     adicionarItem: async (dadosItem) => {
       const { sessaoAtiva } = get();

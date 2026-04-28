@@ -6,7 +6,7 @@ import { Categoria, Item } from "@/types";
 
 interface ItemCardProps {
     item: Item;
-    onEditar: (id: string, dados: Partial<Item>) => void;
+    onEditar: (id: string, dados: { quantidade: number; precoUnitario: number }) => void;
     onRemover: (id: string) => void;
 }
 

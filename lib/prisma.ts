@@ -1,20 +1,30 @@
-import { PrismaClient } from "@prisma/client";
-import { PrismaLibSql } from "@prisma/adapter-libsql";
-import path from "path";
+import "dotenv/config";
+import { PrismaClient } from "../generated/prisma/client";
 
 declare global {
   var prisma: PrismaClient | undefined;
 }
 
-function criarClient() {
-  const adapter = new PrismaLibSql({
-    url: `file:${path.join(process.cwd(), "prisma", "dev.db")}`,
+async function criarClient() {
+  if (process.env.NODE_ENV === "production") {
+    const { PrismaPg } = await import("@prisma/adapter-pg");
+    const adapter = new PrismaPg({
+      connectionString: process.env.DATABASE_URL_PROD!,
+    });
+    return new PrismaClient({ adapter });
+  }
+
+  const { PrismaBetterSqlite3 } = await import("@prisma/adapter-better-sqlite3");
+  const adapter = new PrismaBetterSqlite3({
+    url: process.env.DATABASE_URL!,
   });
   return new PrismaClient({ adapter });
 }
 
-export const prisma = global.prisma || criarClient();
+const prismaGlobal = global.prisma ?? await criarClient();
+
+export const prisma = prismaGlobal;
 
 if (process.env.NODE_ENV !== "production") {
-  global.prisma = prisma;
+  global.prisma = prismaGlobal;
 }

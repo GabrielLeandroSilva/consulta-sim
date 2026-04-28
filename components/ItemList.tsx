@@ -4,7 +4,7 @@ import { ShoppingBasket } from "lucide-react";
 
 interface ItemListProps {
     itens: Item[];
-    onEditar: (id: string, dados: Partial<Item>) => void;
+    onEditar: (id: string, dados: { quantidade: number; precoUnitario: number }) => void;
     onRemover: (id: string) => void;
 }
 

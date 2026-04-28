@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useCompraStore } from "@/store/useCompraStore";
 import { Header } from "@/components/Header";
 import { ItemForm } from "@/components/ItemForm";
@@ -11,15 +11,29 @@ import { ShoppingCart } from "lucide-react";
 export default function Home() {
   const {
     sessaoAtiva,
+    carregando,
     iniciarSessao,
     adicionarItem,
     editarItem,
     removerItem,
     finalizarSessao,
     descartarSessao,
+    carregarHistorico,
   } = useCompraStore();
 
   const [nomeSessao, setNomeSessao] = useState("");
+
+  useEffect(() => {
+    carregarHistorico();
+  }, []);
+
+  if (carregando && !sessaoAtiva) {
+    return (
+      <main className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <p className="text-sm text-gray-400">Carregando...</p>
+      </main>
+    );
+  }
 
   if (!sessaoAtiva) {
     return (
@@ -51,10 +65,10 @@ export default function Home() {
             onClick={() => {
               if (nomeSessao.trim()) iniciarSessao(nomeSessao.trim());
             }}
-            disabled={!nomeSessao.trim()}
+            disabled={!nomeSessao.trim() || carregando}
             className="w-full py-2.5 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
           >
-            Iniciar compra
+            {carregando ? "Criando..." : "Iniciar compra"}
           </button>
 
         </div>
