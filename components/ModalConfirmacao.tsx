@@ -1,5 +1,7 @@
 "use client"
 
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { AlertTriangle } from "lucide-react";
 
 interface ModalConfirmacaoProps {
@@ -17,7 +19,18 @@ export function ModalConfirmacao({
     onCancelar,
     onConfirmar,
 }: ModalConfirmacaoProps) {
-    return (
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+        return () => setMounted(false);
+    }, []);
+    
+    if (!mounted) return null;
+
+
+
+    return createPortal(
         <div
             className="fixed inset-0 bg-black/40 z-50 flex items-end justify-center px-4 pb-8"
             onClick={onCancelar}
@@ -51,6 +64,7 @@ export function ModalConfirmacao({
                 </div>
 
             </div>
-        </div>
-    )
+        </div>,
+        document.body
+    );
 }
