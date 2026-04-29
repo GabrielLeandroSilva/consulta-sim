@@ -52,7 +52,7 @@ export function SessaoCard({ sessao, onRemover }: SessaoCardProps) {
 
                     <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-100">
                         <button
-                            onClick={() => onRemover(sessao.id)}
+                            onClick={() => setModalExcluir(true)}
                             className="flex cursor-pointer items-center gap-1 text-xs text-gray-400 hover:text-red-500 transition-colors"
                         >
                             <Trash2 size={13} />

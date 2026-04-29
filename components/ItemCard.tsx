@@ -51,8 +51,6 @@ export function ItemCard({ item, onEditar, onRemover }: ItemCardProps) {
         setEditando(false);
     }
 
-    console.log("modalExcluir:", modalExcluir);
-
     return (
         <>
             <div className="bg-white border border-gray-200 rounded-xl p-3.5">
@@ -136,7 +134,7 @@ export function ItemCard({ item, onEditar, onRemover }: ItemCardProps) {
                                     >
                                         <Pencil size={15} />
                                     </button>
-                                    <button onClick={() => onRemover(item.id)}
+                                    <button onClick={() => setModalExcluir(true)}
                                         className="p-1 text-gray-400 hover:text-red-500 transition-colors"
                                     >
                                         <Trash2 size={15} />
