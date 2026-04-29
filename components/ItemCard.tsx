@@ -51,6 +51,8 @@ export function ItemCard({ item, onEditar, onRemover }: ItemCardProps) {
         setEditando(false);
     }
 
+    console.log("modalExcluir:", modalExcluir);
+
     return (
         <>
             <div className="bg-white border border-gray-200 rounded-xl p-3.5">
