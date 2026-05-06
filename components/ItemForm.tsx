@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react";
-import { Plus } from "lucide-react";
+import { Plus, Loader2 } from "lucide-react";
 import { Categoria } from "@/types";
 
 interface ItemFormProps {
@@ -10,7 +10,7 @@ interface ItemFormProps {
         quantidade: number;
         precoUnitario: number;
         categoria: Categoria;
-    }) => void;
+    }) => Promise<void>;
 }
 
 const categorias: { value: Categoria; label: string }[] = [
@@ -32,22 +32,28 @@ const FORM_INICIAL = {
 
 export function ItemForm({ onAdicionar }: ItemFormProps) {
     const [form, setForm] = useState(FORM_INICIAL);
+    const [salvando, setSalvando] = useState(false);
 
     const subtotalPreview = Number(form.quantidade) * Number(form.precoUnitario) || 0;
 
-    function handleSubmit(e: React.FormEvent) {
+    async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
 
         if (!form.nome.trim() || !form.precoUnitario) return;
 
-        onAdicionar({
-            nome: form.nome.trim(),
-            quantidade: Number(form.quantidade),
-            precoUnitario: Number(form.precoUnitario),
-            categoria: form.categoria,
-        });
+        setSalvando(true);
 
-        setForm(FORM_INICIAL);
+        try {
+            await onAdicionar({
+                nome: form.nome.trim(),
+                quantidade: Number(form.quantidade),
+                precoUnitario: Number(form.precoUnitario),
+                categoria: form.categoria,
+            });
+            setForm(FORM_INICIAL);
+        } finally {
+            setSalvando(false);
+        }
     }
 
     return (
@@ -61,7 +67,8 @@ export function ItemForm({ onAdicionar }: ItemFormProps) {
                     placeholder="Nome do item"
                     value={form.nome}
                     onChange={(e) => setForm({ ...form, nome: e.target.value })}
-                    className="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    disabled={salvando}
+                    className="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent disabled:opacity-50"
                 />
             </div>
 
@@ -74,7 +81,8 @@ export function ItemForm({ onAdicionar }: ItemFormProps) {
                         step="1"
                         value={form.quantidade}
                         onChange={(e) => setForm({ ...form, quantidade: e.target.value })}
-                        className="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                        disabled={salvando}
+                        className="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent disabled:opacity-50"
                     />
                 </div>
 
@@ -87,7 +95,8 @@ export function ItemForm({ onAdicionar }: ItemFormProps) {
                         placeholder="0,00"
                         value={form.precoUnitario}
                         onChange={(e) => setForm({ ...form, precoUnitario: e.target.value })}
-                        className="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                        disabled={salvando}
+                        className="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent disabled:opacity-50"
                     />
                 </div>
             </div>
@@ -97,7 +106,8 @@ export function ItemForm({ onAdicionar }: ItemFormProps) {
                 <select
                     value={form.categoria}
                     onChange={(e) => setForm({ ...form, categoria: e.target.value as Categoria })}
-                    className="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    disabled={salvando}
+                    className="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent disabled:opacity-50"
                 >
                     {categorias.map((cat) => (
                         <option key={cat.value} value={cat.value}>
@@ -124,10 +134,20 @@ export function ItemForm({ onAdicionar }: ItemFormProps) {
 
                 <button
                     type="submit"
-                    className="flex items-center gap-1.5 px-4 py-2 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 transition-colors"
+                    disabled={salvando || !form.nome.trim() || !form.precoUnitario}
+                    className="flex items-center gap-1.5 px-4 py-2 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                    <Plus size={15} />
-                    Adicionar
+                    {salvando ? (
+                        <>
+                            <Loader2 size={15} className="animate-spin" />
+                            Salvando...
+                        </>
+                    ) : (
+                        <>
+                            <Plus size={15} />
+                            Adicionar
+                        </>
+                    )}
                 </button>
             </div>
         </form>
