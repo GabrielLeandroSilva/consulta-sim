@@ -40,7 +40,6 @@ export default function Home() {
   if (!sessaoAtiva) {
     return (
       <main className="min-h-screen bg-gray-50 pb-20">
-        {/* Header com info do usuário */}
         <header className="bg-white border-b border-gray-200 px-4 py-3 sticky top-0 z-10">
           <div className="max-w-lg mx-auto flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -60,9 +59,6 @@ export default function Home() {
                 <p className="text-xs font-medium text-gray-700 leading-none">
                   {session?.user?.name}
                 </p>
-                <p className="text-xs text-gray-400 mt-0.5">
-                  {session?.user?.email}
-                </p>
               </div>
               <button
                 onClick={() => signOut({ callbackUrl: "/login" })}
@@ -75,7 +71,6 @@ export default function Home() {
           </div>
         </header>
 
-        {/* Formulário de início de compra */}
         <div className="flex items-center justify-center px-4 pt-16">
           <div className="w-full max-w-sm bg-white border border-gray-200 rounded-2xl p-6">
             <div className="flex items-center gap-2 mb-2">
