@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist } from "next/font/google"
 import { BottomNav } from "@/components/BottomNav";
+import { SessionProvider } from "@/components/SessionProvider";
 import "./globals.css";
 
 const geist = Geist({ subsets: ["latin"] });
@@ -34,9 +35,14 @@ export default function RootLayout({
   }) {
   return (
     <html lang="pt-BR">
+       <head>
+        <link rel="manifest" href="/manifest.json" />
+      </head>
       <body className={geist.className}>
-        {children}
-        <BottomNav />
+        <SessionProvider>
+          {children}
+          <BottomNav />
+        </SessionProvider>
       </body>
     </html>
   )

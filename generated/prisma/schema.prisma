@@ -7,6 +7,15 @@ datasource db {
   provider = "postgresql"
 }
 
+model Usuario {
+  id       String   @id @default(cuid())
+  email    String   @unique
+  nome     String?
+  imagem   String?
+  criadoEm DateTime @default(now())
+  sessoes  Sessao[]
+}
+
 model Sessao {
   id           String    @id @default(cuid())
   nome         String
@@ -14,6 +23,8 @@ model Sessao {
   finalizada   Boolean   @default(false)
   criadaEm     DateTime  @default(now())
   finalizadaEm DateTime?
+  usuarioId    String
+  usuario      Usuario   @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
   itens        Item[]
 }
 

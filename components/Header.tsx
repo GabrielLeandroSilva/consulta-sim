@@ -1,6 +1,7 @@
 "use client"
 
-import { ShoppingCart, CheckCircle, Trash2 } from "lucide-react";
+import { signOut } from "next-auth/react";
+import { ShoppingCart, CheckCircle, Trash2, LogOut } from "lucide-react";
 import { useState } from "react";
 import { ModalConfirmacao } from "./ModalConfirmacao";
 
@@ -32,6 +33,14 @@ export function Header({
                     </div>
 
                     <div className="flex items-center gap-2">
+                        <button
+                            onClick={() => signOut({ callbackUrl: "/login" })}
+                            className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
+                            title="Sair"
+                        >
+                            <LogOut size={18} />
+                        </button>
+                        
                         <button
                             onClick={() => setModalDescartar(true)}
                             className="p-2 text-gray-400 hover:text-red-500 transition-colors"
