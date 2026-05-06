@@ -13,18 +13,27 @@ export async function PATCH(
     }
 
     const { id } = await params;
-    const { quantidade, precoUnitario } = await request.json();
+    const { nome, quantidade, precoUnitario, categoria } = await request.json();
     const subtotal = quantidade * precoUnitario;
 
     const item = await prisma.item.update({
       where: { id },
-      data: { quantidade, precoUnitario, subtotal },
+      data: {
+        ...(nome && { nome: nome.trim() }),
+        ...(categoria && { categoria }),
+        quantidade,
+        precoUnitario,
+        subtotal,
+      },
     });
 
     const itens = await prisma.item.findMany({
       where: { sessaoId: item.sessaoId },
     });
-    const novoTotal = itens.reduce((acc: number, i: { subtotal: number }) => acc + i.subtotal, 0);
+    const novoTotal = itens.reduce(
+      (acc: number, i: { subtotal: number }) => acc + i.subtotal,
+      0
+    );
     await prisma.sessao.update({
       where: { id: item.sessaoId },
       data: { total: novoTotal },

@@ -7,7 +7,12 @@ import { ModalConfirmacao } from "./ModalConfirmacao";
 
 interface ItemCardProps {
     item: Item;
-    onEditar: (id: string, dados: { quantidade: number; precoUnitario: number }) => void;
+    onEditar: (id: string, dados: {
+        nome: string;
+        quantidade: number;
+        precoUnitario: number;
+        categoria: string;
+    }) => void;
     onRemover: (id: string) => void;
 }
 
@@ -31,23 +36,40 @@ const labelsCategorias: Record<Categoria, string> = {
     outros: "Outros",
 };
 
+const categorias: { value: Categoria; label: string }[] = [
+    { value: "mercearia", label: "Mercearia" },
+    { value: "hortifruti", label: "Hortifruti" },
+    { value: "frios", label: "Frios" },
+    { value: "limpeza", label: "Limpeza" },
+    { value: "bebidas", label: "Bebidas" },
+    { value: "higiene", label: "Higiene" },
+    { value: "outros", label: "Outros" },
+];
+
 export function ItemCard({ item, onEditar, onRemover }: ItemCardProps) {
     const [editando, setEditando] = useState(false);
+    const [nome, setNome] = useState(item.nome);
     const [quantidade, setQuantidade] = useState(String(item.quantidade));
     const [preco, setPreco] = useState(String(item.precoUnitario));
+    const [categoria, setCategoria] = useState(item.categoria);
     const [modalExcluir, setModalExcluir] = useState(false);
 
     function salvarEdicao() {
+        if (!nome.trim()) return;
         onEditar(item.id, {
+            nome: nome.trim(),
             quantidade: Number(quantidade),
             precoUnitario: Number(preco),
+            categoria,
         });
         setEditando(false);
     }
 
     function cancelarEdicao() {
+        setNome(item.nome);
         setQuantidade(String(item.quantidade));
         setPreco(String(item.precoUnitario));
+        setCategoria(item.categoria);
         setEditando(false);
     }
 
@@ -56,59 +78,90 @@ export function ItemCard({ item, onEditar, onRemover }: ItemCardProps) {
             <div className="bg-white border border-gray-200 rounded-xl p-3.5">
                 <div className="flex items-start justify-between gap-2">
                     <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
-                            <span className="font-medium text-gray-800 truncate">
-                                {item.nome}
-                            </span>
-                            <span
-                                className={`text-xs px-2 py-0.5 rounded-full flex-shrink-0 ${coresCategorias[item.categoria]}`}
-                            >
-                                {labelsCategorias[item.categoria]}
-                            </span>
-                        </div>
 
                         {editando ? (
-                            <div className="flex items-center gap-2 mt-2">
+                            <div className="flex flex-col gap-2">
                                 <div>
-                                    <label className="text-xs text-gray-400">Qtd</label>
+                                    <label className="text-xs text-gray-400 mb-1 block">Nome</label>
                                     <input
-                                        type="number"
-                                        min="1"
-                                        value={quantidade}
-                                        onChange={(e) => setQuantidade(e.target.value)}
-                                        className="block w-16 px-2 py-1 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                        type="text"
+                                        value={nome}
+                                        onChange={(e) => setNome(e.target.value)}
+                                        className="w-full px-2 py-1.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                                     />
                                 </div>
+
                                 <div>
-                                    <label className="text-xs text-gray-400">Preço</label>
-                                    <input
-                                        type="number"
-                                        min="0"
-                                        step="0.01"
-                                        value={preco}
-                                        onChange={(e) => setPreco(e.target.value)}
-                                        className="block w-24 px-2 py-1 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                                    />
+                                    <label className="text-xs text-gray-400 mb-1 block">Categoria</label>
+                                    <select
+                                        value={categoria}
+                                        onChange={(e) => setCategoria(e.target.value as Categoria)}
+                                        className="w-full px-2 py-1.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+                                    >
+                                        {categorias.map((cat) => (
+                                            <option key={cat.value} value={cat.value}>
+                                                {cat.label}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-2">
+                                    <div>
+                                        <label className="text-xs text-gray-400 mb-1 block">Qtd</label>
+                                        <input
+                                            type="number"
+                                            min="1"
+                                            value={quantidade}
+                                            onChange={(e) => setQuantidade(e.target.value)}
+                                            className="w-full px-2 py-1.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="text-xs text-gray-400 mb-1 block">Preço</label>
+                                        <input
+                                            type="number"
+                                            min="0"
+                                            step="0.01"
+                                            value={preco}
+                                            onChange={(e) => setPreco(e.target.value)}
+                                            className="w-full px-2 py-1.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         ) : (
-                            <p className="text-sm text-gray-500">
-                                {item.quantidade}× {" "}
-                                {item.precoUnitario.toLocaleString("pt-BR", {
+                            <>
+                                <div className="flex items-center gap-2 mb-1">
+                                    <span className="font-medium text-gray-800 truncate">
+                                        {item.nome}
+                                    </span>
+                                    <span
+                                        className={`text-xs px-2 py-0.5 rounded-full flex-shrink-0 ${coresCategorias[item.categoria]}`}
+                                    >
+                                        {labelsCategorias[item.categoria]}
+                                    </span>
+                                </div>
+                                <p className="text-sm text-gray-500">
+                                    {item.quantidade}×{" "}
+                                    {item.precoUnitario.toLocaleString("pt-BR", {
+                                        style: "currency",
+                                        currency: "BRL",
+                                    })}
+                                </p>
+                            </>
+                        )}
+                    </div>
+
+                    <div className="flex-shrink-0 text-right">
+                        {!editando && (
+                            <p className="font-semibold text-gray-800">
+                                {item.subtotal.toLocaleString("pt-BR", {
                                     style: "currency",
                                     currency: "BRL",
                                 })}
                             </p>
                         )}
-                    </div>
-
-                    <div className="flex-shrink-0 text-right">
-                        <p className="font-semibold text-gray-800">
-                            {item.subtotal.toLocaleString("pt-BR", {
-                                style: "currency",
-                                currency: "BRL",
-                            })}
-                        </p>
 
                         <div className="flex items-center gap-3 mt-1 justify-end">
                             {editando ? (
@@ -134,7 +187,8 @@ export function ItemCard({ item, onEditar, onRemover }: ItemCardProps) {
                                     >
                                         <Pencil size={15} />
                                     </button>
-                                    <button onClick={() => setModalExcluir(true)}
+                                    <button
+                                        onClick={() => setModalExcluir(true)}
                                         className="p-1 text-gray-400 hover:text-red-500 transition-colors"
                                     >
                                         <Trash2 size={15} />
@@ -143,7 +197,6 @@ export function ItemCard({ item, onEditar, onRemover }: ItemCardProps) {
                             )}
                         </div>
                     </div>
-
                 </div>
             </div>
 

@@ -61,7 +61,12 @@ export const api = {
 
         async editar(
             id: string,
-            dados: { quantidade: number; precoUnitario: number }
+            dados: {
+                nome: string;
+                quantidade: number;
+                precoUnitario: number;
+                categoria: string;
+              }
         ): Promise<Item> {
             const res = await fetch(`${BASE}/itens/${id}`, {
                 method: "PATCH",

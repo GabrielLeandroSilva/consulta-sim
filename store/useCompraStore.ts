@@ -10,7 +10,12 @@ interface CompraStore {
     carregarHistorico: () => Promise<void>;
     iniciarSessao: (nome: string) => Promise<void>;
     adicionarItem: (item: Omit<Item, "id" | "subtotal" | "criadoEm">) => Promise<void>;
-    editarItem: (id: string, dados: { quantidade: number; precoUnitario: number }) => Promise<void>;
+    editarItem: (id: string, dados: {
+      nome: string;
+      quantidade: number;
+      precoUnitario: number;
+      categoria: string;
+    }) => Promise<void>;
     removerItem: (id: string) => Promise<void>;
     finalizarSessao: () => Promise<void>;
     descartarSessao: () => Promise<void>;
@@ -65,7 +70,7 @@ export const useCompraStore = create<CompraStore>((set, get) => ({
     editarItem: async (id, dados) => {
       const { sessaoAtiva } = get();
       if (!sessaoAtiva) return;
-  
+    
       set({ carregando: true });
       try {
         await api.itens.editar(id, dados);
