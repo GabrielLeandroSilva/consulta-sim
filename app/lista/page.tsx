@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { useListaStore } from "@/store/useListaStore";
+import { useCompraStore } from "@/store/useCompraStore";
 import { ListaForm } from "@/components/ListaForm";
 import { ListaItemCard } from "@/components/ListaItemCard";
 import { ModalConfirmacao } from "@/components/ModalConfirmacao";
 import { ListChecks, RotateCcw, Loader2 } from "lucide-react";
-import { Categoria } from "@/types";
+import { Categoria, ListaItem } from "@/types";
 
 export default function ListaPage() {
   const {
@@ -21,11 +22,22 @@ export default function ListaPage() {
     resetarPegos,
   } = useListaStore();
 
+  const { sessaoAtiva, adicionarItem: adicionarNaCompra } = useCompraStore();
+
   const [modalResetar, setModalResetar] = useState(false);
 
   useEffect(() => {
     carregarLista();
   }, []);
+
+  async function handleImportar(item: ListaItem, precoUnitario: number) {
+    await adicionarNaCompra({
+      nome: item.nome,
+      quantidade: item.quantidade,
+      precoUnitario,
+      categoria: item.categoria as Categoria,
+    });
+  }
 
   const itensPegos = itens.filter((i) => i.pego).length;
   const itensPendentes = itens.filter((i) => !i.pego).length;
@@ -68,6 +80,16 @@ export default function ListaPage() {
             </div>
           </div>
         )}
+
+        {/* Aviso de sessão ativa */}
+        {sessaoAtiva && (
+          <div className="max-w-lg mx-auto mt-3 px-3 py-2 bg-indigo-50 rounded-lg flex items-center gap-2">
+            <div className="w-1.5 h-1.5 rounded-full bg-indigo-500 flex-shrink-0" />
+            <p className="text-xs text-indigo-600">
+              Compra ativa: <span className="font-medium">{sessaoAtiva.nome}</span> — clique em 🛒 para importar um item
+            </p>
+          </div>
+        )}
       </header>
 
       <div className="max-w-lg mx-auto px-4 pt-4">
@@ -86,7 +108,6 @@ export default function ListaPage() {
             </div>
           ) : (
             <div className="flex flex-col gap-2">
-              {/* Itens pendentes */}
               {itensPendentes > 0 && (
                 <div>
                   <p className="text-xs font-medium text-gray-400 uppercase tracking-wide mb-2">
@@ -99,6 +120,7 @@ export default function ListaPage() {
                         <ListaItemCard
                           key={item.id}
                           item={item}
+                          temSessaoAtiva={!!sessaoAtiva}
                           onEditar={(id, dados) =>
                             editarItem(id, dados as Partial<{
                               nome: string;
@@ -109,13 +131,13 @@ export default function ListaPage() {
                           }
                           onRemover={removerItem}
                           onTogglePego={togglePego}
+                          onImportar={handleImportar}
                         />
                       ))}
                   </div>
                 </div>
               )}
 
-              {/* Itens pegos */}
               {itensPegos > 0 && (
                 <div className="mt-2">
                   <p className="text-xs font-medium text-gray-400 uppercase tracking-wide mb-2">
@@ -128,6 +150,7 @@ export default function ListaPage() {
                         <ListaItemCard
                           key={item.id}
                           item={item}
+                          temSessaoAtiva={!!sessaoAtiva}
                           onEditar={(id, dados) =>
                             editarItem(id, dados as Partial<{
                               nome: string;
@@ -138,6 +161,7 @@ export default function ListaPage() {
                           }
                           onRemover={removerItem}
                           onTogglePego={togglePego}
+                          onImportar={handleImportar}
                         />
                       ))}
                   </div>

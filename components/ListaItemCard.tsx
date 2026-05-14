@@ -1,15 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { Pencil, Trash2, Check, X } from "lucide-react";
+import { Pencil, Trash2, Check, X, ShoppingCart } from "lucide-react";
 import { Categoria, ListaItem } from "@/types";
 import { ModalConfirmacao } from "./ModalConfirmacao";
+import { ModalPrecoImportacao } from "./ModalPrecoImportacao";
 
 interface ListaItemCardProps {
   item: ListaItem;
+  temSessaoAtiva: boolean;
   onEditar: (id: string, dados: Partial<{ nome: string; quantidade: number; categoria: Categoria }>) => void;
   onRemover: (id: string) => void;
   onTogglePego: (id: string) => void;
+  onImportar: (item: ListaItem, precoUnitario: number) => Promise<void>;
 }
 
 const coresCategorias: Record<Categoria, string> = {
@@ -42,12 +45,20 @@ const categorias: { value: Categoria; label: string }[] = [
   { value: "outros", label: "Outros" },
 ];
 
-export function ListaItemCard({ item, onEditar, onRemover, onTogglePego }: ListaItemCardProps) {
+export function ListaItemCard({
+  item,
+  temSessaoAtiva,
+  onEditar,
+  onRemover,
+  onTogglePego,
+  onImportar,
+}: ListaItemCardProps) {
   const [editando, setEditando] = useState(false);
   const [nome, setNome] = useState(item.nome);
   const [quantidade, setQuantidade] = useState(String(item.quantidade));
   const [categoria, setCategoria] = useState<Categoria>(item.categoria);
   const [modalExcluir, setModalExcluir] = useState(false);
+  const [modalImportar, setModalImportar] = useState(false);
 
   function salvarEdicao() {
     if (!nome.trim()) return;
@@ -146,20 +157,29 @@ export function ListaItemCard({ item, onEditar, onRemover, onTogglePego }: Lista
             ) : (
               <div className="flex items-start justify-between gap-2">
                 <div className="min-w-0">
-                  <p className={`font-medium text-gray-800 truncate ${item.pego ? "line-through text-gray-400" : ""}`}>
+                  <p className={`font-medium text-gray-800 truncate ${
+                    item.pego ? "line-through text-gray-400" : ""
+                  }`}>
                     {item.nome}
                   </p>
                   <div className="flex items-center gap-2 mt-1">
-                    <span className="text-xs text-gray-500">
-                      {item.quantidade}×
-                    </span>
+                    <span className="text-xs text-gray-500">{item.quantidade}×</span>
                     <span className={`text-xs px-2 py-0.5 rounded-full ${coresCategorias[item.categoria]}`}>
                       {labelsCategorias[item.categoria]}
                     </span>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3 flex-shrink-0">
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  {temSessaoAtiva && !item.pego && (
+                    <button
+                      onClick={() => setModalImportar(true)}
+                      className="p-1 text-gray-400 hover:text-indigo-600 transition-colors"
+                      title="Importar para compra"
+                    >
+                      <ShoppingCart size={15} />
+                    </button>
+                  )}
                   <button
                     onClick={() => setEditando(true)}
                     className="p-1 text-gray-400 hover:text-indigo-600 transition-colors"
@@ -189,6 +209,18 @@ export function ListaItemCard({ item, onEditar, onRemover, onTogglePego }: Lista
             setModalExcluir(false);
           }}
           onCancelar={() => setModalExcluir(false)}
+        />
+      )}
+
+      {modalImportar && (
+        <ModalPrecoImportacao
+          nomeItem={item.nome}
+          quantidade={item.quantidade}
+          onImportar={async (preco) => {
+            await onImportar(item, preco);
+            setModalImportar(false);
+          }}
+          onCancelar={() => setModalImportar(false)}
         />
       )}
     </>
