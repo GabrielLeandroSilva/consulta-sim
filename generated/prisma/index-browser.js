@@ -149,6 +149,16 @@ exports.Prisma.ItemScalarFieldEnum = {
   sessaoId: 'sessaoId'
 };
 
+exports.Prisma.ListaItemScalarFieldEnum = {
+  id: 'id',
+  nome: 'nome',
+  quantidade: 'quantidade',
+  categoria: 'categoria',
+  pego: 'pego',
+  criadoEm: 'criadoEm',
+  usuarioId: 'usuarioId'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -168,7 +178,8 @@ exports.Prisma.NullsOrder = {
 exports.Prisma.ModelName = {
   Usuario: 'Usuario',
   Sessao: 'Sessao',
-  Item: 'Item'
+  Item: 'Item',
+  ListaItem: 'ListaItem'
 };
 
 /**

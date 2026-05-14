@@ -8,12 +8,13 @@ datasource db {
 }
 
 model Usuario {
-  id       String   @id @default(cuid())
-  email    String   @unique
-  nome     String?
-  imagem   String?
-  criadoEm DateTime @default(now())
-  sessoes  Sessao[]
+  id         String      @id @default(cuid())
+  email      String      @unique
+  nome       String?
+  imagem     String?
+  criadoEm   DateTime    @default(now())
+  sessoes    Sessao[]
+  listaItens ListaItem[]
 }
 
 model Sessao {
@@ -38,4 +39,15 @@ model Item {
   criadoEm      DateTime @default(now())
   sessaoId      String
   sessao        Sessao   @relation(fields: [sessaoId], references: [id], onDelete: Cascade)
+}
+
+model ListaItem {
+  id         String   @id @default(cuid())
+  nome       String
+  quantidade Int      @default(1)
+  categoria  String
+  pego       Boolean  @default(false)
+  criadoEm   DateTime @default(now())
+  usuarioId  String
+  usuario    Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
 }

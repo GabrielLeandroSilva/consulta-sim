@@ -84,4 +84,58 @@ export const api = {
             if (!res.ok) throw new Error("Erro ao deletar item");
         },
     },
+
+    lista: {
+        async listar(): Promise<import("@/types").ListaItem[]> {
+          const res = await fetch(`${BASE}/lista`);
+          if (!res.ok) throw new Error("Erro ao listar itens");
+          return res.json();
+        },
+      
+        async adicionar(item: {
+          nome: string;
+          quantidade: number;
+          categoria: string;
+        }): Promise<import("@/types").ListaItem> {
+          const res = await fetch(`${BASE}/lista`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(item),
+          });
+          if (!res.ok) throw new Error("Erro ao adicionar item");
+          return res.json();
+        },
+      
+        async editar(
+          id: string,
+          dados: Partial<{
+            nome: string;
+            quantidade: number;
+            categoria: string;
+            pego: boolean;
+          }>
+        ): Promise<import("@/types").ListaItem> {
+          const res = await fetch(`${BASE}/lista/${id}`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(dados),
+          });
+          if (!res.ok) throw new Error("Erro ao editar item");
+          return res.json();
+        },
+      
+        async deletar(id: string): Promise<void> {
+          const res = await fetch(`${BASE}/lista/${id}`, {
+            method: "DELETE",
+          });
+          if (!res.ok) throw new Error("Erro ao deletar item");
+        },
+      
+        async resetarPegos(): Promise<void> {
+          const res = await fetch(`${BASE}/lista`, {
+            method: "DELETE",
+          });
+          if (!res.ok) throw new Error("Erro ao resetar lista");
+        },
+      },
 };

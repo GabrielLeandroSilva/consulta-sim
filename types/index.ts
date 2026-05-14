@@ -27,3 +27,13 @@ export interface Sessao {
   finalizada: boolean;
   usuarioId: string;
 }
+
+export interface ListaItem {
+  id: string;
+  nome: string;
+  quantidade: number;
+  categoria: Categoria;
+  pego: boolean;
+  criadoEm: string;
+  usuarioId: string;
+}

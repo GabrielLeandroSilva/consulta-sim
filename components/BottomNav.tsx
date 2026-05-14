@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ShoppingCart, History } from "lucide-react";
+import { ShoppingCart, History, ListChecks } from "lucide-react";
 
 const links = [
     { href: "/", label: "Compra", icon: ShoppingCart },
+    { href: "/lista", label: "Lista", icon: ListChecks },
     { href: "/historico", label: "Histórico", icon: History },
 ];
 

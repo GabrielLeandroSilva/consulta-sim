@@ -28,6 +28,11 @@ export type Sessao = $Result.DefaultSelection<Prisma.$SessaoPayload>
  * 
  */
 export type Item = $Result.DefaultSelection<Prisma.$ItemPayload>
+/**
+ * Model ListaItem
+ * 
+ */
+export type ListaItem = $Result.DefaultSelection<Prisma.$ListaItemPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -179,6 +184,16 @@ export class PrismaClient<
     * ```
     */
   get item(): Prisma.ItemDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.listaItem`: Exposes CRUD operations for the **ListaItem** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ListaItems
+    * const listaItems = await prisma.listaItem.findMany()
+    * ```
+    */
+  get listaItem(): Prisma.ListaItemDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -615,7 +630,8 @@ export namespace Prisma {
   export const ModelName: {
     Usuario: 'Usuario',
     Sessao: 'Sessao',
-    Item: 'Item'
+    Item: 'Item',
+    ListaItem: 'ListaItem'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -631,7 +647,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "usuario" | "sessao" | "item"
+      modelProps: "usuario" | "sessao" | "item" | "listaItem"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -857,6 +873,80 @@ export namespace Prisma {
           }
         }
       }
+      ListaItem: {
+        payload: Prisma.$ListaItemPayload<ExtArgs>
+        fields: Prisma.ListaItemFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ListaItemFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ListaItemPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ListaItemFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ListaItemPayload>
+          }
+          findFirst: {
+            args: Prisma.ListaItemFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ListaItemPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ListaItemFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ListaItemPayload>
+          }
+          findMany: {
+            args: Prisma.ListaItemFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ListaItemPayload>[]
+          }
+          create: {
+            args: Prisma.ListaItemCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ListaItemPayload>
+          }
+          createMany: {
+            args: Prisma.ListaItemCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ListaItemCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ListaItemPayload>[]
+          }
+          delete: {
+            args: Prisma.ListaItemDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ListaItemPayload>
+          }
+          update: {
+            args: Prisma.ListaItemUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ListaItemPayload>
+          }
+          deleteMany: {
+            args: Prisma.ListaItemDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ListaItemUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ListaItemUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ListaItemPayload>[]
+          }
+          upsert: {
+            args: Prisma.ListaItemUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ListaItemPayload>
+          }
+          aggregate: {
+            args: Prisma.ListaItemAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateListaItem>
+          }
+          groupBy: {
+            args: Prisma.ListaItemGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ListaItemGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ListaItemCountArgs<ExtArgs>
+            result: $Utils.Optional<ListaItemCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -968,6 +1058,7 @@ export namespace Prisma {
     usuario?: UsuarioOmit
     sessao?: SessaoOmit
     item?: ItemOmit
+    listaItem?: ListaItemOmit
   }
 
   /* Types for Logging */
@@ -1049,10 +1140,12 @@ export namespace Prisma {
 
   export type UsuarioCountOutputType = {
     sessoes: number
+    listaItens: number
   }
 
   export type UsuarioCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     sessoes?: boolean | UsuarioCountOutputTypeCountSessoesArgs
+    listaItens?: boolean | UsuarioCountOutputTypeCountListaItensArgs
   }
 
   // Custom InputTypes
@@ -1071,6 +1164,13 @@ export namespace Prisma {
    */
   export type UsuarioCountOutputTypeCountSessoesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: SessaoWhereInput
+  }
+
+  /**
+   * UsuarioCountOutputType without action
+   */
+  export type UsuarioCountOutputTypeCountListaItensArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ListaItemWhereInput
   }
 
 
@@ -1274,6 +1374,7 @@ export namespace Prisma {
     imagem?: boolean
     criadoEm?: boolean
     sessoes?: boolean | Usuario$sessoesArgs<ExtArgs>
+    listaItens?: boolean | Usuario$listaItensArgs<ExtArgs>
     _count?: boolean | UsuarioCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["usuario"]>
 
@@ -1304,6 +1405,7 @@ export namespace Prisma {
   export type UsuarioOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "nome" | "imagem" | "criadoEm", ExtArgs["result"]["usuario"]>
   export type UsuarioInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     sessoes?: boolean | Usuario$sessoesArgs<ExtArgs>
+    listaItens?: boolean | Usuario$listaItensArgs<ExtArgs>
     _count?: boolean | UsuarioCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UsuarioIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -1313,6 +1415,7 @@ export namespace Prisma {
     name: "Usuario"
     objects: {
       sessoes: Prisma.$SessaoPayload<ExtArgs>[]
+      listaItens: Prisma.$ListaItemPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -1715,6 +1818,7 @@ export namespace Prisma {
   export interface Prisma__UsuarioClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     sessoes<T extends Usuario$sessoesArgs<ExtArgs> = {}>(args?: Subset<T, Usuario$sessoesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SessaoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    listaItens<T extends Usuario$listaItensArgs<ExtArgs> = {}>(args?: Subset<T, Usuario$listaItensArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ListaItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2163,6 +2267,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: SessaoScalarFieldEnum | SessaoScalarFieldEnum[]
+  }
+
+  /**
+   * Usuario.listaItens
+   */
+  export type Usuario$listaItensArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ListaItem
+     */
+    select?: ListaItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ListaItem
+     */
+    omit?: ListaItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ListaItemInclude<ExtArgs> | null
+    where?: ListaItemWhereInput
+    orderBy?: ListaItemOrderByWithRelationInput | ListaItemOrderByWithRelationInput[]
+    cursor?: ListaItemWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ListaItemScalarFieldEnum | ListaItemScalarFieldEnum[]
   }
 
   /**
@@ -4482,6 +4610,1129 @@ export namespace Prisma {
 
 
   /**
+   * Model ListaItem
+   */
+
+  export type AggregateListaItem = {
+    _count: ListaItemCountAggregateOutputType | null
+    _avg: ListaItemAvgAggregateOutputType | null
+    _sum: ListaItemSumAggregateOutputType | null
+    _min: ListaItemMinAggregateOutputType | null
+    _max: ListaItemMaxAggregateOutputType | null
+  }
+
+  export type ListaItemAvgAggregateOutputType = {
+    quantidade: number | null
+  }
+
+  export type ListaItemSumAggregateOutputType = {
+    quantidade: number | null
+  }
+
+  export type ListaItemMinAggregateOutputType = {
+    id: string | null
+    nome: string | null
+    quantidade: number | null
+    categoria: string | null
+    pego: boolean | null
+    criadoEm: Date | null
+    usuarioId: string | null
+  }
+
+  export type ListaItemMaxAggregateOutputType = {
+    id: string | null
+    nome: string | null
+    quantidade: number | null
+    categoria: string | null
+    pego: boolean | null
+    criadoEm: Date | null
+    usuarioId: string | null
+  }
+
+  export type ListaItemCountAggregateOutputType = {
+    id: number
+    nome: number
+    quantidade: number
+    categoria: number
+    pego: number
+    criadoEm: number
+    usuarioId: number
+    _all: number
+  }
+
+
+  export type ListaItemAvgAggregateInputType = {
+    quantidade?: true
+  }
+
+  export type ListaItemSumAggregateInputType = {
+    quantidade?: true
+  }
+
+  export type ListaItemMinAggregateInputType = {
+    id?: true
+    nome?: true
+    quantidade?: true
+    categoria?: true
+    pego?: true
+    criadoEm?: true
+    usuarioId?: true
+  }
+
+  export type ListaItemMaxAggregateInputType = {
+    id?: true
+    nome?: true
+    quantidade?: true
+    categoria?: true
+    pego?: true
+    criadoEm?: true
+    usuarioId?: true
+  }
+
+  export type ListaItemCountAggregateInputType = {
+    id?: true
+    nome?: true
+    quantidade?: true
+    categoria?: true
+    pego?: true
+    criadoEm?: true
+    usuarioId?: true
+    _all?: true
+  }
+
+  export type ListaItemAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ListaItem to aggregate.
+     */
+    where?: ListaItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ListaItems to fetch.
+     */
+    orderBy?: ListaItemOrderByWithRelationInput | ListaItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ListaItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ListaItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ListaItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ListaItems
+    **/
+    _count?: true | ListaItemCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ListaItemAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ListaItemSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ListaItemMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ListaItemMaxAggregateInputType
+  }
+
+  export type GetListaItemAggregateType<T extends ListaItemAggregateArgs> = {
+        [P in keyof T & keyof AggregateListaItem]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateListaItem[P]>
+      : GetScalarType<T[P], AggregateListaItem[P]>
+  }
+
+
+
+
+  export type ListaItemGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ListaItemWhereInput
+    orderBy?: ListaItemOrderByWithAggregationInput | ListaItemOrderByWithAggregationInput[]
+    by: ListaItemScalarFieldEnum[] | ListaItemScalarFieldEnum
+    having?: ListaItemScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ListaItemCountAggregateInputType | true
+    _avg?: ListaItemAvgAggregateInputType
+    _sum?: ListaItemSumAggregateInputType
+    _min?: ListaItemMinAggregateInputType
+    _max?: ListaItemMaxAggregateInputType
+  }
+
+  export type ListaItemGroupByOutputType = {
+    id: string
+    nome: string
+    quantidade: number
+    categoria: string
+    pego: boolean
+    criadoEm: Date
+    usuarioId: string
+    _count: ListaItemCountAggregateOutputType | null
+    _avg: ListaItemAvgAggregateOutputType | null
+    _sum: ListaItemSumAggregateOutputType | null
+    _min: ListaItemMinAggregateOutputType | null
+    _max: ListaItemMaxAggregateOutputType | null
+  }
+
+  type GetListaItemGroupByPayload<T extends ListaItemGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ListaItemGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ListaItemGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ListaItemGroupByOutputType[P]>
+            : GetScalarType<T[P], ListaItemGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ListaItemSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    nome?: boolean
+    quantidade?: boolean
+    categoria?: boolean
+    pego?: boolean
+    criadoEm?: boolean
+    usuarioId?: boolean
+    usuario?: boolean | UsuarioDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["listaItem"]>
+
+  export type ListaItemSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    nome?: boolean
+    quantidade?: boolean
+    categoria?: boolean
+    pego?: boolean
+    criadoEm?: boolean
+    usuarioId?: boolean
+    usuario?: boolean | UsuarioDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["listaItem"]>
+
+  export type ListaItemSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    nome?: boolean
+    quantidade?: boolean
+    categoria?: boolean
+    pego?: boolean
+    criadoEm?: boolean
+    usuarioId?: boolean
+    usuario?: boolean | UsuarioDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["listaItem"]>
+
+  export type ListaItemSelectScalar = {
+    id?: boolean
+    nome?: boolean
+    quantidade?: boolean
+    categoria?: boolean
+    pego?: boolean
+    criadoEm?: boolean
+    usuarioId?: boolean
+  }
+
+  export type ListaItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nome" | "quantidade" | "categoria" | "pego" | "criadoEm" | "usuarioId", ExtArgs["result"]["listaItem"]>
+  export type ListaItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    usuario?: boolean | UsuarioDefaultArgs<ExtArgs>
+  }
+  export type ListaItemIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    usuario?: boolean | UsuarioDefaultArgs<ExtArgs>
+  }
+  export type ListaItemIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    usuario?: boolean | UsuarioDefaultArgs<ExtArgs>
+  }
+
+  export type $ListaItemPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ListaItem"
+    objects: {
+      usuario: Prisma.$UsuarioPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      nome: string
+      quantidade: number
+      categoria: string
+      pego: boolean
+      criadoEm: Date
+      usuarioId: string
+    }, ExtArgs["result"]["listaItem"]>
+    composites: {}
+  }
+
+  type ListaItemGetPayload<S extends boolean | null | undefined | ListaItemDefaultArgs> = $Result.GetResult<Prisma.$ListaItemPayload, S>
+
+  type ListaItemCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ListaItemFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ListaItemCountAggregateInputType | true
+    }
+
+  export interface ListaItemDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ListaItem'], meta: { name: 'ListaItem' } }
+    /**
+     * Find zero or one ListaItem that matches the filter.
+     * @param {ListaItemFindUniqueArgs} args - Arguments to find a ListaItem
+     * @example
+     * // Get one ListaItem
+     * const listaItem = await prisma.listaItem.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ListaItemFindUniqueArgs>(args: SelectSubset<T, ListaItemFindUniqueArgs<ExtArgs>>): Prisma__ListaItemClient<$Result.GetResult<Prisma.$ListaItemPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ListaItem that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ListaItemFindUniqueOrThrowArgs} args - Arguments to find a ListaItem
+     * @example
+     * // Get one ListaItem
+     * const listaItem = await prisma.listaItem.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ListaItemFindUniqueOrThrowArgs>(args: SelectSubset<T, ListaItemFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ListaItemClient<$Result.GetResult<Prisma.$ListaItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ListaItem that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ListaItemFindFirstArgs} args - Arguments to find a ListaItem
+     * @example
+     * // Get one ListaItem
+     * const listaItem = await prisma.listaItem.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ListaItemFindFirstArgs>(args?: SelectSubset<T, ListaItemFindFirstArgs<ExtArgs>>): Prisma__ListaItemClient<$Result.GetResult<Prisma.$ListaItemPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ListaItem that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ListaItemFindFirstOrThrowArgs} args - Arguments to find a ListaItem
+     * @example
+     * // Get one ListaItem
+     * const listaItem = await prisma.listaItem.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ListaItemFindFirstOrThrowArgs>(args?: SelectSubset<T, ListaItemFindFirstOrThrowArgs<ExtArgs>>): Prisma__ListaItemClient<$Result.GetResult<Prisma.$ListaItemPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ListaItems that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ListaItemFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ListaItems
+     * const listaItems = await prisma.listaItem.findMany()
+     * 
+     * // Get first 10 ListaItems
+     * const listaItems = await prisma.listaItem.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const listaItemWithIdOnly = await prisma.listaItem.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ListaItemFindManyArgs>(args?: SelectSubset<T, ListaItemFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ListaItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ListaItem.
+     * @param {ListaItemCreateArgs} args - Arguments to create a ListaItem.
+     * @example
+     * // Create one ListaItem
+     * const ListaItem = await prisma.listaItem.create({
+     *   data: {
+     *     // ... data to create a ListaItem
+     *   }
+     * })
+     * 
+     */
+    create<T extends ListaItemCreateArgs>(args: SelectSubset<T, ListaItemCreateArgs<ExtArgs>>): Prisma__ListaItemClient<$Result.GetResult<Prisma.$ListaItemPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ListaItems.
+     * @param {ListaItemCreateManyArgs} args - Arguments to create many ListaItems.
+     * @example
+     * // Create many ListaItems
+     * const listaItem = await prisma.listaItem.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ListaItemCreateManyArgs>(args?: SelectSubset<T, ListaItemCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ListaItems and returns the data saved in the database.
+     * @param {ListaItemCreateManyAndReturnArgs} args - Arguments to create many ListaItems.
+     * @example
+     * // Create many ListaItems
+     * const listaItem = await prisma.listaItem.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ListaItems and only return the `id`
+     * const listaItemWithIdOnly = await prisma.listaItem.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ListaItemCreateManyAndReturnArgs>(args?: SelectSubset<T, ListaItemCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ListaItemPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ListaItem.
+     * @param {ListaItemDeleteArgs} args - Arguments to delete one ListaItem.
+     * @example
+     * // Delete one ListaItem
+     * const ListaItem = await prisma.listaItem.delete({
+     *   where: {
+     *     // ... filter to delete one ListaItem
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ListaItemDeleteArgs>(args: SelectSubset<T, ListaItemDeleteArgs<ExtArgs>>): Prisma__ListaItemClient<$Result.GetResult<Prisma.$ListaItemPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ListaItem.
+     * @param {ListaItemUpdateArgs} args - Arguments to update one ListaItem.
+     * @example
+     * // Update one ListaItem
+     * const listaItem = await prisma.listaItem.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ListaItemUpdateArgs>(args: SelectSubset<T, ListaItemUpdateArgs<ExtArgs>>): Prisma__ListaItemClient<$Result.GetResult<Prisma.$ListaItemPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ListaItems.
+     * @param {ListaItemDeleteManyArgs} args - Arguments to filter ListaItems to delete.
+     * @example
+     * // Delete a few ListaItems
+     * const { count } = await prisma.listaItem.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ListaItemDeleteManyArgs>(args?: SelectSubset<T, ListaItemDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ListaItems.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ListaItemUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ListaItems
+     * const listaItem = await prisma.listaItem.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ListaItemUpdateManyArgs>(args: SelectSubset<T, ListaItemUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ListaItems and returns the data updated in the database.
+     * @param {ListaItemUpdateManyAndReturnArgs} args - Arguments to update many ListaItems.
+     * @example
+     * // Update many ListaItems
+     * const listaItem = await prisma.listaItem.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ListaItems and only return the `id`
+     * const listaItemWithIdOnly = await prisma.listaItem.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ListaItemUpdateManyAndReturnArgs>(args: SelectSubset<T, ListaItemUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ListaItemPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ListaItem.
+     * @param {ListaItemUpsertArgs} args - Arguments to update or create a ListaItem.
+     * @example
+     * // Update or create a ListaItem
+     * const listaItem = await prisma.listaItem.upsert({
+     *   create: {
+     *     // ... data to create a ListaItem
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ListaItem we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ListaItemUpsertArgs>(args: SelectSubset<T, ListaItemUpsertArgs<ExtArgs>>): Prisma__ListaItemClient<$Result.GetResult<Prisma.$ListaItemPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ListaItems.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ListaItemCountArgs} args - Arguments to filter ListaItems to count.
+     * @example
+     * // Count the number of ListaItems
+     * const count = await prisma.listaItem.count({
+     *   where: {
+     *     // ... the filter for the ListaItems we want to count
+     *   }
+     * })
+    **/
+    count<T extends ListaItemCountArgs>(
+      args?: Subset<T, ListaItemCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ListaItemCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ListaItem.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ListaItemAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ListaItemAggregateArgs>(args: Subset<T, ListaItemAggregateArgs>): Prisma.PrismaPromise<GetListaItemAggregateType<T>>
+
+    /**
+     * Group by ListaItem.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ListaItemGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ListaItemGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ListaItemGroupByArgs['orderBy'] }
+        : { orderBy?: ListaItemGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ListaItemGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetListaItemGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ListaItem model
+   */
+  readonly fields: ListaItemFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ListaItem.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ListaItemClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    usuario<T extends UsuarioDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UsuarioDefaultArgs<ExtArgs>>): Prisma__UsuarioClient<$Result.GetResult<Prisma.$UsuarioPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ListaItem model
+   */
+  interface ListaItemFieldRefs {
+    readonly id: FieldRef<"ListaItem", 'String'>
+    readonly nome: FieldRef<"ListaItem", 'String'>
+    readonly quantidade: FieldRef<"ListaItem", 'Int'>
+    readonly categoria: FieldRef<"ListaItem", 'String'>
+    readonly pego: FieldRef<"ListaItem", 'Boolean'>
+    readonly criadoEm: FieldRef<"ListaItem", 'DateTime'>
+    readonly usuarioId: FieldRef<"ListaItem", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ListaItem findUnique
+   */
+  export type ListaItemFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ListaItem
+     */
+    select?: ListaItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ListaItem
+     */
+    omit?: ListaItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ListaItemInclude<ExtArgs> | null
+    /**
+     * Filter, which ListaItem to fetch.
+     */
+    where: ListaItemWhereUniqueInput
+  }
+
+  /**
+   * ListaItem findUniqueOrThrow
+   */
+  export type ListaItemFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ListaItem
+     */
+    select?: ListaItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ListaItem
+     */
+    omit?: ListaItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ListaItemInclude<ExtArgs> | null
+    /**
+     * Filter, which ListaItem to fetch.
+     */
+    where: ListaItemWhereUniqueInput
+  }
+
+  /**
+   * ListaItem findFirst
+   */
+  export type ListaItemFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ListaItem
+     */
+    select?: ListaItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ListaItem
+     */
+    omit?: ListaItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ListaItemInclude<ExtArgs> | null
+    /**
+     * Filter, which ListaItem to fetch.
+     */
+    where?: ListaItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ListaItems to fetch.
+     */
+    orderBy?: ListaItemOrderByWithRelationInput | ListaItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ListaItems.
+     */
+    cursor?: ListaItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ListaItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ListaItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ListaItems.
+     */
+    distinct?: ListaItemScalarFieldEnum | ListaItemScalarFieldEnum[]
+  }
+
+  /**
+   * ListaItem findFirstOrThrow
+   */
+  export type ListaItemFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ListaItem
+     */
+    select?: ListaItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ListaItem
+     */
+    omit?: ListaItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ListaItemInclude<ExtArgs> | null
+    /**
+     * Filter, which ListaItem to fetch.
+     */
+    where?: ListaItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ListaItems to fetch.
+     */
+    orderBy?: ListaItemOrderByWithRelationInput | ListaItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ListaItems.
+     */
+    cursor?: ListaItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ListaItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ListaItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ListaItems.
+     */
+    distinct?: ListaItemScalarFieldEnum | ListaItemScalarFieldEnum[]
+  }
+
+  /**
+   * ListaItem findMany
+   */
+  export type ListaItemFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ListaItem
+     */
+    select?: ListaItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ListaItem
+     */
+    omit?: ListaItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ListaItemInclude<ExtArgs> | null
+    /**
+     * Filter, which ListaItems to fetch.
+     */
+    where?: ListaItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ListaItems to fetch.
+     */
+    orderBy?: ListaItemOrderByWithRelationInput | ListaItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ListaItems.
+     */
+    cursor?: ListaItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ListaItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ListaItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ListaItems.
+     */
+    distinct?: ListaItemScalarFieldEnum | ListaItemScalarFieldEnum[]
+  }
+
+  /**
+   * ListaItem create
+   */
+  export type ListaItemCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ListaItem
+     */
+    select?: ListaItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ListaItem
+     */
+    omit?: ListaItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ListaItemInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ListaItem.
+     */
+    data: XOR<ListaItemCreateInput, ListaItemUncheckedCreateInput>
+  }
+
+  /**
+   * ListaItem createMany
+   */
+  export type ListaItemCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ListaItems.
+     */
+    data: ListaItemCreateManyInput | ListaItemCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ListaItem createManyAndReturn
+   */
+  export type ListaItemCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ListaItem
+     */
+    select?: ListaItemSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ListaItem
+     */
+    omit?: ListaItemOmit<ExtArgs> | null
+    /**
+     * The data used to create many ListaItems.
+     */
+    data: ListaItemCreateManyInput | ListaItemCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ListaItemIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ListaItem update
+   */
+  export type ListaItemUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ListaItem
+     */
+    select?: ListaItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ListaItem
+     */
+    omit?: ListaItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ListaItemInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ListaItem.
+     */
+    data: XOR<ListaItemUpdateInput, ListaItemUncheckedUpdateInput>
+    /**
+     * Choose, which ListaItem to update.
+     */
+    where: ListaItemWhereUniqueInput
+  }
+
+  /**
+   * ListaItem updateMany
+   */
+  export type ListaItemUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ListaItems.
+     */
+    data: XOR<ListaItemUpdateManyMutationInput, ListaItemUncheckedUpdateManyInput>
+    /**
+     * Filter which ListaItems to update
+     */
+    where?: ListaItemWhereInput
+    /**
+     * Limit how many ListaItems to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ListaItem updateManyAndReturn
+   */
+  export type ListaItemUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ListaItem
+     */
+    select?: ListaItemSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ListaItem
+     */
+    omit?: ListaItemOmit<ExtArgs> | null
+    /**
+     * The data used to update ListaItems.
+     */
+    data: XOR<ListaItemUpdateManyMutationInput, ListaItemUncheckedUpdateManyInput>
+    /**
+     * Filter which ListaItems to update
+     */
+    where?: ListaItemWhereInput
+    /**
+     * Limit how many ListaItems to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ListaItemIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ListaItem upsert
+   */
+  export type ListaItemUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ListaItem
+     */
+    select?: ListaItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ListaItem
+     */
+    omit?: ListaItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ListaItemInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ListaItem to update in case it exists.
+     */
+    where: ListaItemWhereUniqueInput
+    /**
+     * In case the ListaItem found by the `where` argument doesn't exist, create a new ListaItem with this data.
+     */
+    create: XOR<ListaItemCreateInput, ListaItemUncheckedCreateInput>
+    /**
+     * In case the ListaItem was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ListaItemUpdateInput, ListaItemUncheckedUpdateInput>
+  }
+
+  /**
+   * ListaItem delete
+   */
+  export type ListaItemDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ListaItem
+     */
+    select?: ListaItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ListaItem
+     */
+    omit?: ListaItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ListaItemInclude<ExtArgs> | null
+    /**
+     * Filter which ListaItem to delete.
+     */
+    where: ListaItemWhereUniqueInput
+  }
+
+  /**
+   * ListaItem deleteMany
+   */
+  export type ListaItemDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ListaItems to delete
+     */
+    where?: ListaItemWhereInput
+    /**
+     * Limit how many ListaItems to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ListaItem without action
+   */
+  export type ListaItemDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ListaItem
+     */
+    select?: ListaItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ListaItem
+     */
+    omit?: ListaItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ListaItemInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -4531,6 +5782,19 @@ export namespace Prisma {
   };
 
   export type ItemScalarFieldEnum = (typeof ItemScalarFieldEnum)[keyof typeof ItemScalarFieldEnum]
+
+
+  export const ListaItemScalarFieldEnum: {
+    id: 'id',
+    nome: 'nome',
+    quantidade: 'quantidade',
+    categoria: 'categoria',
+    pego: 'pego',
+    criadoEm: 'criadoEm',
+    usuarioId: 'usuarioId'
+  };
+
+  export type ListaItemScalarFieldEnum = (typeof ListaItemScalarFieldEnum)[keyof typeof ListaItemScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -4638,6 +5902,7 @@ export namespace Prisma {
     imagem?: StringNullableFilter<"Usuario"> | string | null
     criadoEm?: DateTimeFilter<"Usuario"> | Date | string
     sessoes?: SessaoListRelationFilter
+    listaItens?: ListaItemListRelationFilter
   }
 
   export type UsuarioOrderByWithRelationInput = {
@@ -4647,6 +5912,7 @@ export namespace Prisma {
     imagem?: SortOrderInput | SortOrder
     criadoEm?: SortOrder
     sessoes?: SessaoOrderByRelationAggregateInput
+    listaItens?: ListaItemOrderByRelationAggregateInput
   }
 
   export type UsuarioWhereUniqueInput = Prisma.AtLeast<{
@@ -4659,6 +5925,7 @@ export namespace Prisma {
     imagem?: StringNullableFilter<"Usuario"> | string | null
     criadoEm?: DateTimeFilter<"Usuario"> | Date | string
     sessoes?: SessaoListRelationFilter
+    listaItens?: ListaItemListRelationFilter
   }, "id" | "email">
 
   export type UsuarioOrderByWithAggregationInput = {
@@ -4825,6 +6092,73 @@ export namespace Prisma {
     sessaoId?: StringWithAggregatesFilter<"Item"> | string
   }
 
+  export type ListaItemWhereInput = {
+    AND?: ListaItemWhereInput | ListaItemWhereInput[]
+    OR?: ListaItemWhereInput[]
+    NOT?: ListaItemWhereInput | ListaItemWhereInput[]
+    id?: StringFilter<"ListaItem"> | string
+    nome?: StringFilter<"ListaItem"> | string
+    quantidade?: IntFilter<"ListaItem"> | number
+    categoria?: StringFilter<"ListaItem"> | string
+    pego?: BoolFilter<"ListaItem"> | boolean
+    criadoEm?: DateTimeFilter<"ListaItem"> | Date | string
+    usuarioId?: StringFilter<"ListaItem"> | string
+    usuario?: XOR<UsuarioScalarRelationFilter, UsuarioWhereInput>
+  }
+
+  export type ListaItemOrderByWithRelationInput = {
+    id?: SortOrder
+    nome?: SortOrder
+    quantidade?: SortOrder
+    categoria?: SortOrder
+    pego?: SortOrder
+    criadoEm?: SortOrder
+    usuarioId?: SortOrder
+    usuario?: UsuarioOrderByWithRelationInput
+  }
+
+  export type ListaItemWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ListaItemWhereInput | ListaItemWhereInput[]
+    OR?: ListaItemWhereInput[]
+    NOT?: ListaItemWhereInput | ListaItemWhereInput[]
+    nome?: StringFilter<"ListaItem"> | string
+    quantidade?: IntFilter<"ListaItem"> | number
+    categoria?: StringFilter<"ListaItem"> | string
+    pego?: BoolFilter<"ListaItem"> | boolean
+    criadoEm?: DateTimeFilter<"ListaItem"> | Date | string
+    usuarioId?: StringFilter<"ListaItem"> | string
+    usuario?: XOR<UsuarioScalarRelationFilter, UsuarioWhereInput>
+  }, "id">
+
+  export type ListaItemOrderByWithAggregationInput = {
+    id?: SortOrder
+    nome?: SortOrder
+    quantidade?: SortOrder
+    categoria?: SortOrder
+    pego?: SortOrder
+    criadoEm?: SortOrder
+    usuarioId?: SortOrder
+    _count?: ListaItemCountOrderByAggregateInput
+    _avg?: ListaItemAvgOrderByAggregateInput
+    _max?: ListaItemMaxOrderByAggregateInput
+    _min?: ListaItemMinOrderByAggregateInput
+    _sum?: ListaItemSumOrderByAggregateInput
+  }
+
+  export type ListaItemScalarWhereWithAggregatesInput = {
+    AND?: ListaItemScalarWhereWithAggregatesInput | ListaItemScalarWhereWithAggregatesInput[]
+    OR?: ListaItemScalarWhereWithAggregatesInput[]
+    NOT?: ListaItemScalarWhereWithAggregatesInput | ListaItemScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ListaItem"> | string
+    nome?: StringWithAggregatesFilter<"ListaItem"> | string
+    quantidade?: IntWithAggregatesFilter<"ListaItem"> | number
+    categoria?: StringWithAggregatesFilter<"ListaItem"> | string
+    pego?: BoolWithAggregatesFilter<"ListaItem"> | boolean
+    criadoEm?: DateTimeWithAggregatesFilter<"ListaItem"> | Date | string
+    usuarioId?: StringWithAggregatesFilter<"ListaItem"> | string
+  }
+
   export type UsuarioCreateInput = {
     id?: string
     email: string
@@ -4832,6 +6166,7 @@ export namespace Prisma {
     imagem?: string | null
     criadoEm?: Date | string
     sessoes?: SessaoCreateNestedManyWithoutUsuarioInput
+    listaItens?: ListaItemCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioUncheckedCreateInput = {
@@ -4841,6 +6176,7 @@ export namespace Prisma {
     imagem?: string | null
     criadoEm?: Date | string
     sessoes?: SessaoUncheckedCreateNestedManyWithoutUsuarioInput
+    listaItens?: ListaItemUncheckedCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioUpdateInput = {
@@ -4850,6 +6186,7 @@ export namespace Prisma {
     imagem?: NullableStringFieldUpdateOperationsInput | string | null
     criadoEm?: DateTimeFieldUpdateOperationsInput | Date | string
     sessoes?: SessaoUpdateManyWithoutUsuarioNestedInput
+    listaItens?: ListaItemUpdateManyWithoutUsuarioNestedInput
   }
 
   export type UsuarioUncheckedUpdateInput = {
@@ -4859,6 +6196,7 @@ export namespace Prisma {
     imagem?: NullableStringFieldUpdateOperationsInput | string | null
     criadoEm?: DateTimeFieldUpdateOperationsInput | Date | string
     sessoes?: SessaoUncheckedUpdateManyWithoutUsuarioNestedInput
+    listaItens?: ListaItemUncheckedUpdateManyWithoutUsuarioNestedInput
   }
 
   export type UsuarioCreateManyInput = {
@@ -5034,6 +6372,75 @@ export namespace Prisma {
     sessaoId?: StringFieldUpdateOperationsInput | string
   }
 
+  export type ListaItemCreateInput = {
+    id?: string
+    nome: string
+    quantidade?: number
+    categoria: string
+    pego?: boolean
+    criadoEm?: Date | string
+    usuario: UsuarioCreateNestedOneWithoutListaItensInput
+  }
+
+  export type ListaItemUncheckedCreateInput = {
+    id?: string
+    nome: string
+    quantidade?: number
+    categoria: string
+    pego?: boolean
+    criadoEm?: Date | string
+    usuarioId: string
+  }
+
+  export type ListaItemUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nome?: StringFieldUpdateOperationsInput | string
+    quantidade?: IntFieldUpdateOperationsInput | number
+    categoria?: StringFieldUpdateOperationsInput | string
+    pego?: BoolFieldUpdateOperationsInput | boolean
+    criadoEm?: DateTimeFieldUpdateOperationsInput | Date | string
+    usuario?: UsuarioUpdateOneRequiredWithoutListaItensNestedInput
+  }
+
+  export type ListaItemUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nome?: StringFieldUpdateOperationsInput | string
+    quantidade?: IntFieldUpdateOperationsInput | number
+    categoria?: StringFieldUpdateOperationsInput | string
+    pego?: BoolFieldUpdateOperationsInput | boolean
+    criadoEm?: DateTimeFieldUpdateOperationsInput | Date | string
+    usuarioId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type ListaItemCreateManyInput = {
+    id?: string
+    nome: string
+    quantidade?: number
+    categoria: string
+    pego?: boolean
+    criadoEm?: Date | string
+    usuarioId: string
+  }
+
+  export type ListaItemUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nome?: StringFieldUpdateOperationsInput | string
+    quantidade?: IntFieldUpdateOperationsInput | number
+    categoria?: StringFieldUpdateOperationsInput | string
+    pego?: BoolFieldUpdateOperationsInput | boolean
+    criadoEm?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ListaItemUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nome?: StringFieldUpdateOperationsInput | string
+    quantidade?: IntFieldUpdateOperationsInput | number
+    categoria?: StringFieldUpdateOperationsInput | string
+    pego?: BoolFieldUpdateOperationsInput | boolean
+    criadoEm?: DateTimeFieldUpdateOperationsInput | Date | string
+    usuarioId?: StringFieldUpdateOperationsInput | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -5081,12 +6488,22 @@ export namespace Prisma {
     none?: SessaoWhereInput
   }
 
+  export type ListaItemListRelationFilter = {
+    every?: ListaItemWhereInput
+    some?: ListaItemWhereInput
+    none?: ListaItemWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
   }
 
   export type SessaoOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ListaItemOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -5359,6 +6776,44 @@ export namespace Prisma {
     _max?: NestedIntFilter<$PrismaModel>
   }
 
+  export type ListaItemCountOrderByAggregateInput = {
+    id?: SortOrder
+    nome?: SortOrder
+    quantidade?: SortOrder
+    categoria?: SortOrder
+    pego?: SortOrder
+    criadoEm?: SortOrder
+    usuarioId?: SortOrder
+  }
+
+  export type ListaItemAvgOrderByAggregateInput = {
+    quantidade?: SortOrder
+  }
+
+  export type ListaItemMaxOrderByAggregateInput = {
+    id?: SortOrder
+    nome?: SortOrder
+    quantidade?: SortOrder
+    categoria?: SortOrder
+    pego?: SortOrder
+    criadoEm?: SortOrder
+    usuarioId?: SortOrder
+  }
+
+  export type ListaItemMinOrderByAggregateInput = {
+    id?: SortOrder
+    nome?: SortOrder
+    quantidade?: SortOrder
+    categoria?: SortOrder
+    pego?: SortOrder
+    criadoEm?: SortOrder
+    usuarioId?: SortOrder
+  }
+
+  export type ListaItemSumOrderByAggregateInput = {
+    quantidade?: SortOrder
+  }
+
   export type SessaoCreateNestedManyWithoutUsuarioInput = {
     create?: XOR<SessaoCreateWithoutUsuarioInput, SessaoUncheckedCreateWithoutUsuarioInput> | SessaoCreateWithoutUsuarioInput[] | SessaoUncheckedCreateWithoutUsuarioInput[]
     connectOrCreate?: SessaoCreateOrConnectWithoutUsuarioInput | SessaoCreateOrConnectWithoutUsuarioInput[]
@@ -5366,11 +6821,25 @@ export namespace Prisma {
     connect?: SessaoWhereUniqueInput | SessaoWhereUniqueInput[]
   }
 
+  export type ListaItemCreateNestedManyWithoutUsuarioInput = {
+    create?: XOR<ListaItemCreateWithoutUsuarioInput, ListaItemUncheckedCreateWithoutUsuarioInput> | ListaItemCreateWithoutUsuarioInput[] | ListaItemUncheckedCreateWithoutUsuarioInput[]
+    connectOrCreate?: ListaItemCreateOrConnectWithoutUsuarioInput | ListaItemCreateOrConnectWithoutUsuarioInput[]
+    createMany?: ListaItemCreateManyUsuarioInputEnvelope
+    connect?: ListaItemWhereUniqueInput | ListaItemWhereUniqueInput[]
+  }
+
   export type SessaoUncheckedCreateNestedManyWithoutUsuarioInput = {
     create?: XOR<SessaoCreateWithoutUsuarioInput, SessaoUncheckedCreateWithoutUsuarioInput> | SessaoCreateWithoutUsuarioInput[] | SessaoUncheckedCreateWithoutUsuarioInput[]
     connectOrCreate?: SessaoCreateOrConnectWithoutUsuarioInput | SessaoCreateOrConnectWithoutUsuarioInput[]
     createMany?: SessaoCreateManyUsuarioInputEnvelope
     connect?: SessaoWhereUniqueInput | SessaoWhereUniqueInput[]
+  }
+
+  export type ListaItemUncheckedCreateNestedManyWithoutUsuarioInput = {
+    create?: XOR<ListaItemCreateWithoutUsuarioInput, ListaItemUncheckedCreateWithoutUsuarioInput> | ListaItemCreateWithoutUsuarioInput[] | ListaItemUncheckedCreateWithoutUsuarioInput[]
+    connectOrCreate?: ListaItemCreateOrConnectWithoutUsuarioInput | ListaItemCreateOrConnectWithoutUsuarioInput[]
+    createMany?: ListaItemCreateManyUsuarioInputEnvelope
+    connect?: ListaItemWhereUniqueInput | ListaItemWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -5399,6 +6868,20 @@ export namespace Prisma {
     deleteMany?: SessaoScalarWhereInput | SessaoScalarWhereInput[]
   }
 
+  export type ListaItemUpdateManyWithoutUsuarioNestedInput = {
+    create?: XOR<ListaItemCreateWithoutUsuarioInput, ListaItemUncheckedCreateWithoutUsuarioInput> | ListaItemCreateWithoutUsuarioInput[] | ListaItemUncheckedCreateWithoutUsuarioInput[]
+    connectOrCreate?: ListaItemCreateOrConnectWithoutUsuarioInput | ListaItemCreateOrConnectWithoutUsuarioInput[]
+    upsert?: ListaItemUpsertWithWhereUniqueWithoutUsuarioInput | ListaItemUpsertWithWhereUniqueWithoutUsuarioInput[]
+    createMany?: ListaItemCreateManyUsuarioInputEnvelope
+    set?: ListaItemWhereUniqueInput | ListaItemWhereUniqueInput[]
+    disconnect?: ListaItemWhereUniqueInput | ListaItemWhereUniqueInput[]
+    delete?: ListaItemWhereUniqueInput | ListaItemWhereUniqueInput[]
+    connect?: ListaItemWhereUniqueInput | ListaItemWhereUniqueInput[]
+    update?: ListaItemUpdateWithWhereUniqueWithoutUsuarioInput | ListaItemUpdateWithWhereUniqueWithoutUsuarioInput[]
+    updateMany?: ListaItemUpdateManyWithWhereWithoutUsuarioInput | ListaItemUpdateManyWithWhereWithoutUsuarioInput[]
+    deleteMany?: ListaItemScalarWhereInput | ListaItemScalarWhereInput[]
+  }
+
   export type SessaoUncheckedUpdateManyWithoutUsuarioNestedInput = {
     create?: XOR<SessaoCreateWithoutUsuarioInput, SessaoUncheckedCreateWithoutUsuarioInput> | SessaoCreateWithoutUsuarioInput[] | SessaoUncheckedCreateWithoutUsuarioInput[]
     connectOrCreate?: SessaoCreateOrConnectWithoutUsuarioInput | SessaoCreateOrConnectWithoutUsuarioInput[]
@@ -5411,6 +6894,20 @@ export namespace Prisma {
     update?: SessaoUpdateWithWhereUniqueWithoutUsuarioInput | SessaoUpdateWithWhereUniqueWithoutUsuarioInput[]
     updateMany?: SessaoUpdateManyWithWhereWithoutUsuarioInput | SessaoUpdateManyWithWhereWithoutUsuarioInput[]
     deleteMany?: SessaoScalarWhereInput | SessaoScalarWhereInput[]
+  }
+
+  export type ListaItemUncheckedUpdateManyWithoutUsuarioNestedInput = {
+    create?: XOR<ListaItemCreateWithoutUsuarioInput, ListaItemUncheckedCreateWithoutUsuarioInput> | ListaItemCreateWithoutUsuarioInput[] | ListaItemUncheckedCreateWithoutUsuarioInput[]
+    connectOrCreate?: ListaItemCreateOrConnectWithoutUsuarioInput | ListaItemCreateOrConnectWithoutUsuarioInput[]
+    upsert?: ListaItemUpsertWithWhereUniqueWithoutUsuarioInput | ListaItemUpsertWithWhereUniqueWithoutUsuarioInput[]
+    createMany?: ListaItemCreateManyUsuarioInputEnvelope
+    set?: ListaItemWhereUniqueInput | ListaItemWhereUniqueInput[]
+    disconnect?: ListaItemWhereUniqueInput | ListaItemWhereUniqueInput[]
+    delete?: ListaItemWhereUniqueInput | ListaItemWhereUniqueInput[]
+    connect?: ListaItemWhereUniqueInput | ListaItemWhereUniqueInput[]
+    update?: ListaItemUpdateWithWhereUniqueWithoutUsuarioInput | ListaItemUpdateWithWhereUniqueWithoutUsuarioInput[]
+    updateMany?: ListaItemUpdateManyWithWhereWithoutUsuarioInput | ListaItemUpdateManyWithWhereWithoutUsuarioInput[]
+    deleteMany?: ListaItemScalarWhereInput | ListaItemScalarWhereInput[]
   }
 
   export type UsuarioCreateNestedOneWithoutSessoesInput = {
@@ -5505,6 +7002,20 @@ export namespace Prisma {
     upsert?: SessaoUpsertWithoutItensInput
     connect?: SessaoWhereUniqueInput
     update?: XOR<XOR<SessaoUpdateToOneWithWhereWithoutItensInput, SessaoUpdateWithoutItensInput>, SessaoUncheckedUpdateWithoutItensInput>
+  }
+
+  export type UsuarioCreateNestedOneWithoutListaItensInput = {
+    create?: XOR<UsuarioCreateWithoutListaItensInput, UsuarioUncheckedCreateWithoutListaItensInput>
+    connectOrCreate?: UsuarioCreateOrConnectWithoutListaItensInput
+    connect?: UsuarioWhereUniqueInput
+  }
+
+  export type UsuarioUpdateOneRequiredWithoutListaItensNestedInput = {
+    create?: XOR<UsuarioCreateWithoutListaItensInput, UsuarioUncheckedCreateWithoutListaItensInput>
+    connectOrCreate?: UsuarioCreateOrConnectWithoutListaItensInput
+    upsert?: UsuarioUpsertWithoutListaItensInput
+    connect?: UsuarioWhereUniqueInput
+    update?: XOR<XOR<UsuarioUpdateToOneWithWhereWithoutListaItensInput, UsuarioUpdateWithoutListaItensInput>, UsuarioUncheckedUpdateWithoutListaItensInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -5727,6 +7238,34 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ListaItemCreateWithoutUsuarioInput = {
+    id?: string
+    nome: string
+    quantidade?: number
+    categoria: string
+    pego?: boolean
+    criadoEm?: Date | string
+  }
+
+  export type ListaItemUncheckedCreateWithoutUsuarioInput = {
+    id?: string
+    nome: string
+    quantidade?: number
+    categoria: string
+    pego?: boolean
+    criadoEm?: Date | string
+  }
+
+  export type ListaItemCreateOrConnectWithoutUsuarioInput = {
+    where: ListaItemWhereUniqueInput
+    create: XOR<ListaItemCreateWithoutUsuarioInput, ListaItemUncheckedCreateWithoutUsuarioInput>
+  }
+
+  export type ListaItemCreateManyUsuarioInputEnvelope = {
+    data: ListaItemCreateManyUsuarioInput | ListaItemCreateManyUsuarioInput[]
+    skipDuplicates?: boolean
+  }
+
   export type SessaoUpsertWithWhereUniqueWithoutUsuarioInput = {
     where: SessaoWhereUniqueInput
     update: XOR<SessaoUpdateWithoutUsuarioInput, SessaoUncheckedUpdateWithoutUsuarioInput>
@@ -5756,12 +7295,42 @@ export namespace Prisma {
     usuarioId?: StringFilter<"Sessao"> | string
   }
 
+  export type ListaItemUpsertWithWhereUniqueWithoutUsuarioInput = {
+    where: ListaItemWhereUniqueInput
+    update: XOR<ListaItemUpdateWithoutUsuarioInput, ListaItemUncheckedUpdateWithoutUsuarioInput>
+    create: XOR<ListaItemCreateWithoutUsuarioInput, ListaItemUncheckedCreateWithoutUsuarioInput>
+  }
+
+  export type ListaItemUpdateWithWhereUniqueWithoutUsuarioInput = {
+    where: ListaItemWhereUniqueInput
+    data: XOR<ListaItemUpdateWithoutUsuarioInput, ListaItemUncheckedUpdateWithoutUsuarioInput>
+  }
+
+  export type ListaItemUpdateManyWithWhereWithoutUsuarioInput = {
+    where: ListaItemScalarWhereInput
+    data: XOR<ListaItemUpdateManyMutationInput, ListaItemUncheckedUpdateManyWithoutUsuarioInput>
+  }
+
+  export type ListaItemScalarWhereInput = {
+    AND?: ListaItemScalarWhereInput | ListaItemScalarWhereInput[]
+    OR?: ListaItemScalarWhereInput[]
+    NOT?: ListaItemScalarWhereInput | ListaItemScalarWhereInput[]
+    id?: StringFilter<"ListaItem"> | string
+    nome?: StringFilter<"ListaItem"> | string
+    quantidade?: IntFilter<"ListaItem"> | number
+    categoria?: StringFilter<"ListaItem"> | string
+    pego?: BoolFilter<"ListaItem"> | boolean
+    criadoEm?: DateTimeFilter<"ListaItem"> | Date | string
+    usuarioId?: StringFilter<"ListaItem"> | string
+  }
+
   export type UsuarioCreateWithoutSessoesInput = {
     id?: string
     email: string
     nome?: string | null
     imagem?: string | null
     criadoEm?: Date | string
+    listaItens?: ListaItemCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioUncheckedCreateWithoutSessoesInput = {
@@ -5770,6 +7339,7 @@ export namespace Prisma {
     nome?: string | null
     imagem?: string | null
     criadoEm?: Date | string
+    listaItens?: ListaItemUncheckedCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioCreateOrConnectWithoutSessoesInput = {
@@ -5824,6 +7394,7 @@ export namespace Prisma {
     nome?: NullableStringFieldUpdateOperationsInput | string | null
     imagem?: NullableStringFieldUpdateOperationsInput | string | null
     criadoEm?: DateTimeFieldUpdateOperationsInput | Date | string
+    listaItens?: ListaItemUpdateManyWithoutUsuarioNestedInput
   }
 
   export type UsuarioUncheckedUpdateWithoutSessoesInput = {
@@ -5832,6 +7403,7 @@ export namespace Prisma {
     nome?: NullableStringFieldUpdateOperationsInput | string | null
     imagem?: NullableStringFieldUpdateOperationsInput | string | null
     criadoEm?: DateTimeFieldUpdateOperationsInput | Date | string
+    listaItens?: ListaItemUncheckedUpdateManyWithoutUsuarioNestedInput
   }
 
   export type ItemUpsertWithWhereUniqueWithoutSessaoInput = {
@@ -5920,6 +7492,58 @@ export namespace Prisma {
     usuarioId?: StringFieldUpdateOperationsInput | string
   }
 
+  export type UsuarioCreateWithoutListaItensInput = {
+    id?: string
+    email: string
+    nome?: string | null
+    imagem?: string | null
+    criadoEm?: Date | string
+    sessoes?: SessaoCreateNestedManyWithoutUsuarioInput
+  }
+
+  export type UsuarioUncheckedCreateWithoutListaItensInput = {
+    id?: string
+    email: string
+    nome?: string | null
+    imagem?: string | null
+    criadoEm?: Date | string
+    sessoes?: SessaoUncheckedCreateNestedManyWithoutUsuarioInput
+  }
+
+  export type UsuarioCreateOrConnectWithoutListaItensInput = {
+    where: UsuarioWhereUniqueInput
+    create: XOR<UsuarioCreateWithoutListaItensInput, UsuarioUncheckedCreateWithoutListaItensInput>
+  }
+
+  export type UsuarioUpsertWithoutListaItensInput = {
+    update: XOR<UsuarioUpdateWithoutListaItensInput, UsuarioUncheckedUpdateWithoutListaItensInput>
+    create: XOR<UsuarioCreateWithoutListaItensInput, UsuarioUncheckedCreateWithoutListaItensInput>
+    where?: UsuarioWhereInput
+  }
+
+  export type UsuarioUpdateToOneWithWhereWithoutListaItensInput = {
+    where?: UsuarioWhereInput
+    data: XOR<UsuarioUpdateWithoutListaItensInput, UsuarioUncheckedUpdateWithoutListaItensInput>
+  }
+
+  export type UsuarioUpdateWithoutListaItensInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    nome?: NullableStringFieldUpdateOperationsInput | string | null
+    imagem?: NullableStringFieldUpdateOperationsInput | string | null
+    criadoEm?: DateTimeFieldUpdateOperationsInput | Date | string
+    sessoes?: SessaoUpdateManyWithoutUsuarioNestedInput
+  }
+
+  export type UsuarioUncheckedUpdateWithoutListaItensInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    nome?: NullableStringFieldUpdateOperationsInput | string | null
+    imagem?: NullableStringFieldUpdateOperationsInput | string | null
+    criadoEm?: DateTimeFieldUpdateOperationsInput | Date | string
+    sessoes?: SessaoUncheckedUpdateManyWithoutUsuarioNestedInput
+  }
+
   export type SessaoCreateManyUsuarioInput = {
     id?: string
     nome: string
@@ -5927,6 +7551,15 @@ export namespace Prisma {
     finalizada?: boolean
     criadaEm?: Date | string
     finalizadaEm?: Date | string | null
+  }
+
+  export type ListaItemCreateManyUsuarioInput = {
+    id?: string
+    nome: string
+    quantidade?: number
+    categoria: string
+    pego?: boolean
+    criadoEm?: Date | string
   }
 
   export type SessaoUpdateWithoutUsuarioInput = {
@@ -5956,6 +7589,33 @@ export namespace Prisma {
     finalizada?: BoolFieldUpdateOperationsInput | boolean
     criadaEm?: DateTimeFieldUpdateOperationsInput | Date | string
     finalizadaEm?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type ListaItemUpdateWithoutUsuarioInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nome?: StringFieldUpdateOperationsInput | string
+    quantidade?: IntFieldUpdateOperationsInput | number
+    categoria?: StringFieldUpdateOperationsInput | string
+    pego?: BoolFieldUpdateOperationsInput | boolean
+    criadoEm?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ListaItemUncheckedUpdateWithoutUsuarioInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nome?: StringFieldUpdateOperationsInput | string
+    quantidade?: IntFieldUpdateOperationsInput | number
+    categoria?: StringFieldUpdateOperationsInput | string
+    pego?: BoolFieldUpdateOperationsInput | boolean
+    criadoEm?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ListaItemUncheckedUpdateManyWithoutUsuarioInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nome?: StringFieldUpdateOperationsInput | string
+    quantidade?: IntFieldUpdateOperationsInput | number
+    categoria?: StringFieldUpdateOperationsInput | string
+    pego?: BoolFieldUpdateOperationsInput | boolean
+    criadoEm?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ItemCreateManySessaoInput = {

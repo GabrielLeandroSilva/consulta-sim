@@ -1,6 +1,7 @@
 import { Item, Sessao } from "@/types";
 
 const CHAVE_SESSAO_ATIVA = "consultasim-sessao-ativa";
+const CHAVE_LISTA = "consultasim-lista";
 
 export const cache = {
   salvarSessao(sessao: Sessao) {
@@ -86,5 +87,47 @@ export const cache = {
     );
 
     this.salvarSessao({ ...sessao, itens: itensAtualizados });
+  },
+};
+
+export const cacheLista = {
+  salvar(itens: import("@/types").ListaItem[]) {
+    localStorage.setItem(CHAVE_LISTA, JSON.stringify(itens));
+  },
+
+  carregar(): import("@/types").ListaItem[] {
+    if (typeof window === "undefined") return [];
+    const raw = localStorage.getItem(CHAVE_LISTA);
+    if (!raw) return [];
+    try {
+      return JSON.parse(raw) as import("@/types").ListaItem[];
+    } catch {
+      return [];
+    }
+  },
+
+  adicionar(item: import("@/types").ListaItem) {
+    const itens = this.carregar();
+    this.salvar([...itens, item]);
+  },
+
+  atualizar(id: string, dados: Partial<import("@/types").ListaItem>) {
+    const itens = this.carregar();
+    this.salvar(itens.map((i) => (i.id === id ? { ...i, ...dados } : i)));
+  },
+
+  remover(id: string) {
+    const itens = this.carregar();
+    this.salvar(itens.filter((i) => i.id !== id));
+  },
+
+  substituirIdTemporario(idTemp: string, idReal: string) {
+    const itens = this.carregar();
+    this.salvar(itens.map((i) => (i.id === idTemp ? { ...i, id: idReal } : i)));
+  },
+
+  resetarPegos() {
+    const itens = this.carregar();
+    this.salvar(itens.map((i) => ({ ...i, pego: false })));
   },
 };
