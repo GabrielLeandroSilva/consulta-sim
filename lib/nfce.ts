@@ -13,13 +13,11 @@ export interface DadosNFCe {
       const hostname = urlObj.hostname;
       const estado = extrairEstado(hostname);
   
-      // Formato SP e outros estados: ?p=chave|cAmbiente|...
       const paramP = params.get("p");
       if (paramP) {
         return parsearFormatoP(paramP, url, estado);
       }
   
-      // Formato padrão: ?chNFe=...&dhEmi=...&vNF=...
       const chave = params.get("chNFe") ?? params.get("chave");
       if (!chave) return null;
   
@@ -35,27 +33,30 @@ export interface DadosNFCe {
     }
   }
   
-  function parsearFormatoP(paramP: string, url: string, estado: string | null): DadosNFCe | null {
+  function parsearFormatoP(
+    paramP: string,
+    url: string,
+    estado: string | null
+  ): DadosNFCe | null {
     try {
       const partes = paramP.split("|");
       const chave = partes[0];
   
       if (!chave || chave.length !== 44) return null;
   
-      // Extrai data da chave NFC-e (posição 2-5: AAMM)
+      // Extrai data completa da chave NFC-e
+      // Estrutura: UF(2) + AAMM(4) + DD(2) + CNPJ(14) + ...
       const dataEmissao = extrairDataDaChave(chave);
   
-      // Tenta extrair valor total das partes seguintes se disponível
-      let valorTotal = 0;
-      for (const parte of partes.slice(1)) {
-        const num = parseFloat(parte.replace(",", "."));
-        if (!isNaN(num) && num > 1 && num < 99999) {
-          valorTotal = num;
-          break;
-        }
-      }
-  
-      return { chave, dataEmissao, valorTotal, urlOriginal: url, estado };
+      // Não tenta extrair valor das partes — SP não inclui valor na URL
+      // Os outros campos são cAmbiente, tpAmb, etc — não são valores monetários
+      return {
+        chave,
+        dataEmissao,
+        valorTotal: 0,
+        urlOriginal: url,
+        estado,
+      };
     } catch {
       return null;
     }
@@ -63,11 +64,18 @@ export interface DadosNFCe {
   
   function extrairDataDaChave(chave: string): Date {
     try {
-      // Chave NFC-e: posição 3-4 = ano, posição 5-6 = mês
+      // Estrutura da chave NFC-e:
+      // posição 0-1  → cUF (estado)
+      // posição 2-3  → AA (ano)
+      // posição 4-5  → MM (mês)
+      // posição 6-7  → DD (dia)
       const ano = `20${chave.slice(2, 4)}`;
       const mes = chave.slice(4, 6);
-      const dia = "01";
-      return new Date(`${ano}-${mes}-${dia}T12:00:00`);
+      const dia = chave.slice(6, 8);
+      const data = new Date(`${ano}-${mes}-${dia}T12:00:00`);
+  
+      if (isNaN(data.getTime())) return new Date();
+      return data;
     } catch {
       return new Date();
     }
