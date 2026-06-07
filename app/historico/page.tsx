@@ -94,7 +94,7 @@ export default function HistoricoPage() {
                 setErroLeitura(null);
                 setLeitorAberto(true);
               }}
-              className="flex items-center gap-1.5 px-3 py-1.5 border border-gray-200 text-gray-600 text-sm rounded-lg hover:bg-gray-50 transition-colors"
+              className="flex items-center gap-1.5 px-3 py-1.5 border border-indigo-600 text-indigo-600 text-sm rounded-lg hover:bg-indigo-50 transition-colors"
             >
               <QrCode size={15} />
               Ler nota
