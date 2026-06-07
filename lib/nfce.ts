@@ -10,58 +10,80 @@ export interface DadosNFCe {
     try {
       const urlObj = new URL(url);
       const params = urlObj.searchParams;
-  
-      // Extrai chave da nota
-      const chave =
-        params.get("chNFe") ??
-        params.get("chave") ??
-        params.get("p")?.split("|")[0] ??
-        null;
-  
-      if (!chave) return null;
-  
-      // Extrai valor total
-      const vNF =
-        params.get("vNF") ??
-        params.get("valorTotal") ??
-        params.get("p")?.split("|").find((p) => p.includes(".")) ??
-        null;
-  
-      const valorTotal = vNF ? parseFloat(vNF) : 0;
-  
-      // Extrai data de emissão
-      const dhEmi =
-        params.get("dhEmi") ??
-        params.get("dataEmissao") ??
-        params.get("p")?.split("|")[3] ??
-        null;
-  
-      let dataEmissao = new Date();
-  
-      if (dhEmi) {
-        // Formato: 20240412T143022 ou 2024-04-12T14:30:22
-        const limpo = dhEmi.replace(/[-:]/g, "");
-        const ano = limpo.slice(0, 4);
-        const mes = limpo.slice(4, 6);
-        const dia = limpo.slice(6, 8);
-        const hora = limpo.slice(9, 11) || "00";
-        const min = limpo.slice(11, 13) || "00";
-        dataEmissao = new Date(`${ano}-${mes}-${dia}T${hora}:${min}:00`);
-      }
-  
-      // Extrai estado pela URL
       const hostname = urlObj.hostname;
       const estado = extrairEstado(hostname);
   
-      return {
-        chave,
-        dataEmissao,
-        valorTotal,
-        urlOriginal: url,
-        estado,
-      };
+      // Formato SP e outros estados: ?p=chave|cAmbiente|...
+      const paramP = params.get("p");
+      if (paramP) {
+        return parsearFormatoP(paramP, url, estado);
+      }
+  
+      // Formato padrão: ?chNFe=...&dhEmi=...&vNF=...
+      const chave = params.get("chNFe") ?? params.get("chave");
+      if (!chave) return null;
+  
+      const vNF = params.get("vNF") ?? params.get("valorTotal");
+      const valorTotal = vNF ? parseFloat(vNF) : 0;
+  
+      const dhEmi = params.get("dhEmi") ?? params.get("dataEmissao");
+      const dataEmissao = dhEmi ? parsearData(dhEmi) : extrairDataDaChave(chave);
+  
+      return { chave, dataEmissao, valorTotal, urlOriginal: url, estado };
     } catch {
       return null;
+    }
+  }
+  
+  function parsearFormatoP(paramP: string, url: string, estado: string | null): DadosNFCe | null {
+    try {
+      const partes = paramP.split("|");
+      const chave = partes[0];
+  
+      if (!chave || chave.length !== 44) return null;
+  
+      // Extrai data da chave NFC-e (posição 2-5: AAMM)
+      const dataEmissao = extrairDataDaChave(chave);
+  
+      // Tenta extrair valor total das partes seguintes se disponível
+      let valorTotal = 0;
+      for (const parte of partes.slice(1)) {
+        const num = parseFloat(parte.replace(",", "."));
+        if (!isNaN(num) && num > 1 && num < 99999) {
+          valorTotal = num;
+          break;
+        }
+      }
+  
+      return { chave, dataEmissao, valorTotal, urlOriginal: url, estado };
+    } catch {
+      return null;
+    }
+  }
+  
+  function extrairDataDaChave(chave: string): Date {
+    try {
+      // Chave NFC-e: posição 3-4 = ano, posição 5-6 = mês
+      const ano = `20${chave.slice(2, 4)}`;
+      const mes = chave.slice(4, 6);
+      const dia = "01";
+      return new Date(`${ano}-${mes}-${dia}T12:00:00`);
+    } catch {
+      return new Date();
+    }
+  }
+  
+  function parsearData(dhEmi: string): Date {
+    try {
+      const limpo = dhEmi.replace(/[-:]/g, "");
+      const ano = limpo.slice(0, 4);
+      const mes = limpo.slice(4, 6);
+      const dia = limpo.slice(6, 8);
+      const hora = limpo.slice(9, 11) || "00";
+      const min = limpo.slice(11, 13) || "00";
+      return new Date(`${ano}-${mes}-${dia}T${hora}:${min}:00`);
+    } catch {
+      return new Date();
     }
   }
   

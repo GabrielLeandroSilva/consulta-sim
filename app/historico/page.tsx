@@ -51,19 +51,19 @@ export default function HistoricoPage() {
     setDadosNota(dados);
   }
 
-  async function handleSalvarNota(nome: string) {
+  async function handleSalvarNota(nome: string, valorTotal: number) {
     if (!dadosNota) return;
-
+  
     const res = await fetch("/api/nota-fiscal", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         nome,
-        valorTotal: dadosNota.valorTotal,
+        valorTotal,
         dataEmissao: dadosNota.dataEmissao.toISOString(),
       }),
     });
-
+  
     if (res.ok) {
       setDadosNota(null);
       await carregarHistorico();

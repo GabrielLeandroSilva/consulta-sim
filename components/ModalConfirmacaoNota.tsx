@@ -7,7 +7,7 @@ import { DadosNFCe, formatarChave } from "@/lib/nfce";
 
 interface ModalConfirmacaoNotaProps {
   dados: DadosNFCe;
-  onConfirmar: (nome: string) => Promise<void>;
+  onConfirmar: (nome: string, valorTotal: number) => Promise<void>;
   onCancelar: () => void;
 }
 
@@ -28,13 +28,18 @@ export function ModalConfirmacaoNota({
   })}${dados.estado ? ` - ${dados.estado}` : ""}`;
 
   const [nome, setNome] = useState(nomeSugerido);
+  const [valor, setValor] = useState(
+    dados.valorTotal > 0 ? String(dados.valorTotal) : ""
+  );
   const [salvando, setSalvando] = useState(false);
 
+  const valorIdentificado = dados.valorTotal > 0;
+
   async function handleConfirmar() {
-    if (!nome.trim()) return;
+    if (!nome.trim() || !valor || Number(valor) <= 0) return;
     setSalvando(true);
     try {
-      await onConfirmar(nome.trim());
+      await onConfirmar(nome.trim(), Number(valor));
     } finally {
       setSalvando(false);
     }
@@ -73,16 +78,34 @@ export function ModalConfirmacaoNota({
 
           <div className="flex items-center gap-2.5">
             <DollarSign size={15} className="text-gray-400 flex-shrink-0" />
-            <div>
-              <p className="text-xs text-gray-400">Valor total</p>
-              <p className="text-sm font-semibold text-gray-800">
-                {dados.valorTotal > 0
-                  ? dados.valorTotal.toLocaleString("pt-BR", {
-                      style: "currency",
-                      currency: "BRL",
-                    })
-                  : "Não identificado"}
+            <div className="flex-1">
+              <p className="text-xs text-gray-400 mb-1">
+                Valor total
+                {!valorIdentificado && (
+                  <span className="ml-1.5 text-amber-500">
+                    — não identificado automaticamente
+                  </span>
+                )}
               </p>
+              {valorIdentificado ? (
+                <p className="text-sm font-semibold text-gray-800">
+                  {dados.valorTotal.toLocaleString("pt-BR", {
+                    style: "currency",
+                    currency: "BRL",
+                  })}
+                </p>
+              ) : (
+                <input
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  placeholder="Digite o valor total"
+                  value={valor}
+                  onChange={(e) => setValor(e.target.value)}
+                  autoFocus
+                  className="w-full px-2.5 py-1.5 border border-amber-200 bg-amber-50 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
+                />
+              )}
             </div>
           </div>
 
@@ -127,7 +150,7 @@ export function ModalConfirmacaoNota({
           </button>
           <button
             onClick={handleConfirmar}
-            disabled={!nome.trim() || salvando}
+            disabled={!nome.trim() || !valor || Number(valor) <= 0 || salvando}
             className="flex-1 py-2.5 bg-indigo-600 text-white text-sm rounded-xl hover:bg-indigo-700 transition-colors disabled:opacity-40 flex items-center justify-center gap-1.5"
           >
             {salvando ? (
